@@ -611,10 +611,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2d028f36a50b9254685b43baed4a03df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  platformSideLength: 73.94
-  platformPointSpacing: 13.15
-  baseSideLength: 97.95
-  basePointSpacing: 39.82
+  platformSideLength: 89.83
+  platformPointSpacing: 11.11
+  baseSideLength: 110.66
+  basePointSpacing: 45.65
 --- !u!4 &1353653574
 Transform:
   m_ObjectHideFlags: 0

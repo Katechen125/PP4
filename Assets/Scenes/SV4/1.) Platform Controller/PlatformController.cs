@@ -94,6 +94,10 @@ public class PlatformController : MonoBehaviour
 
     void Update()
     {
+        //float pdc = Time.time % 1.0f / 1.0f;
+        //floatValues[0] = Mathf.Cos(pdc * (float)Mathf.PI * 2.0f) * 15;
+        //floatValues[1] = Mathf.Sin(pdc * (float)Mathf.PI * 2.0f) * 15;
+
         // if true this will override user values with slider values
         if (useSliders == true) { UpdateValuesFromSliders(); }
 

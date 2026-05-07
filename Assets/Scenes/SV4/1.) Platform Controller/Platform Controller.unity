@@ -4081,9 +4081,9 @@ MonoBehaviour:
   - {fileID: 1196860578}
   - {fileID: 2076061589}
   useSliders: 1
-  mode: 0
+  mode: 2
   comPort: COM5
-  baudRate: 9600
+  baudRate: 115200
   byteValues: 
   floatValues: []
   nextSendDelay: 0.02

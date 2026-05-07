@@ -5,8 +5,8 @@ using UnityEngine.UIElements;
 
 public class PlatformBuilder : MonoBehaviour
 {
-    float hornLength = 0f; // *** Replace the 0 with the length of your horn here
-    float rodLength = 0f; // *** Replace the 0 with the length of your rods here
+    float hornLength = 12.93f; // *** Replace the 0 with the length of your horn here
+    float rodLength = 87.23f; // *** Replace the 0 with the length of your rods here
 
     public bool showRodLines = true;
     public float[] inputValues = { 0, 0, 0, 0, 0, 0 }; //Sway Surge Heave Pitch Roll Yaw
@@ -27,21 +27,21 @@ public class PlatformBuilder : MonoBehaviour
 
         // 1.) *** fill in all 6 values with your values from solidworks
         basePoints = new Vector3[6];
-        basePoints[0] = new Vector3(0.00f, 0.00f, 0.00f);
-        basePoints[1] = new Vector3(0.00f, 0.00f, 0.00f);
-        basePoints[2] = new Vector3(0.00f, 0.00f, 0.00f);
-        basePoints[3] = new Vector3(0.00f, 0.00f, 0.00f);
-        basePoints[4] = new Vector3(0.00f, 0.00f, 0.00f);
-        basePoints[5] = new Vector3(0.00f, 0.00f, 0.00f);
+        basePoints[0] = new Vector3(-22.82f, -59.67f, 0.0f);
+        basePoints[1] = new Vector3(22.82f, -59.67f, 0.0f);
+        basePoints[2] = new Vector3(63.09f, 10.07f, 0.0f);
+        basePoints[3] = new Vector3(40.27f, 49.60f, 0.0f);
+        basePoints[4] = new Vector3(-40.27f, 49.60f, 0.0f);
+        basePoints[5] = new Vector3(-63.09f, 10.07f, 0.0f);
 
         // 2.) *** fill in all 6 values with your values from solidworks
         platformPoints = new Vector3[6];
-        platformPoints[0] = new Vector3(0.00f, 0.00f, 0.00f);
-        platformPoints[1] = new Vector3(0.00f, 0.00f, 0.00f);
-        platformPoints[2] = new Vector3(0.00f, 0.00f, 0.00f);
-        platformPoints[3] = new Vector3(0.00f, 0.00f, 0.00f);
-        platformPoints[4] = new Vector3(0.00f, 0.00f, 0.00f);
-        platformPoints[5] = new Vector3(0.00f, 0.00f, 0.00f);
+        platformPoints[0] = new Vector3(-41.88f, -30.59f, 0.0f);
+        platformPoints[1] = new Vector3(41.88f, -30.59f, 0.0f);
+        platformPoints[2] = new Vector3(47.43f, -20.97f, 0.0f);
+        platformPoints[3] = new Vector3(5.55f, 51.57f, 0.0f);
+        platformPoints[4] = new Vector3(-5.55f, 51.57f, 0.0f);
+        platformPoints[5] = new Vector3(-47.43f, -20.97f, 0.0f);
 
         // Utility Functions and Setup
 
@@ -67,12 +67,12 @@ public class PlatformBuilder : MonoBehaviour
 
         float sideC = rodLength;
         float sideB = (platformPointOrigins[3] - hornEndPoint).magnitude; // Discuss
-        
+
         // 3.) *** replace the 0 with the equation to calculate sideA
-        float sideA = 0;
+        float sideA = Mathf.Sqrt((sideC * sideC) - (sideB * sideB ));
 
         platformDefaultHeight = sideA;
-
+       
         // Update the z value (up) with our newly calculated height
         for (int i = 0; i < platformPointOrigins.Length; i++)
         {
@@ -91,13 +91,13 @@ public class PlatformBuilder : MonoBehaviour
 
             // 4.) *** Enter the desired values for pitch, roll, and yaw
             // Rotate the platform based on inputs, remember to convert from degrees to radians
-            platformPoints[i] = RotatePoint(i, 0, 0, 0);
+            platformPoints[i] = RotatePoint(i, inputValues[3] * Mathf.Deg2Rad, inputValues[4] * Mathf.Deg2Rad, inputValues[5] * Mathf.Deg2Rad);
 
             // 5.) *** Translate each point by the input values for sway, surge, and heave
-            platformPoints[i] += new Vector3(0, 0, 0);
+            platformPoints[i] += new Vector3(inputValues[0], inputValues[1], inputValues[2]);
 
             // 6.) *** Add in the default height
-            platformPoints[i].z += 0; // *** replace zero with our calculated height (platformDefaultHeight);
+            platformPoints[i].z += platformDefaultHeight; // *** replace zero with our calculated height (platformDefaultHeight);
 
             // Error check: measure distances and see if the platform is capable
             // of acheiving the desired position/orientation
@@ -108,7 +108,7 @@ public class PlatformBuilder : MonoBehaviour
 
                 // Measure the distance (arm/rod length)
                 // 7.) *** replace zero with the vector difference magnitude
-                float measuredLegnth = 0;
+                float measuredLegnth = (platformPoints[i]-basePoints[i]).magnitude;
 
                 // Check the distance of the requested position compared to the
                 // length parameters of our platform (actuator rod or servo/horn)

@@ -1,0 +1,36 @@
+PlatformPoints: C++ Syntax
+-------------
+{{-41.88f,-30.59f,0.0f},
+{41.88f,-30.59f,0.0f},
+{47.43f,-20.97f,0.0f},
+{5.55f,51.57f,0.0f},
+{-5.55f,51.57f,0.0f},
+{-47.43f,-20.97f,0.0f}};
+
+PlatformPoints:C# Syntax
+-------------
+PlatformPoints:[0] = new Vector3(-41.88f,-30.59f,0.0f);
+PlatformPoints:[1] = new Vector3(41.88f,-30.59f,0.0f);
+PlatformPoints:[2] = new Vector3(47.43f,-20.97f,0.0f);
+PlatformPoints:[3] = new Vector3(5.55f,51.57f,0.0f);
+PlatformPoints:[4] = new Vector3(-5.55f,51.57f,0.0f);
+PlatformPoints:[5] = new Vector3(-47.43f,-20.97f,0.0f);
+
+BasePoints: C++ Syntax
+-------------
+{{-22.82f,-59.67f,0.0f},
+{22.82f,-59.67f,0.0f},
+{63.09f,10.07f,0.0f},
+{40.27f,49.60f,0.0f},
+{-40.27f,49.60f,0.0f},
+{-63.09f,10.07f,0.0f}};
+
+BasePoints:C# Syntax
+-------------
+BasePoints:[0] = new Vector3(-22.82f,-59.67f,0.0f);
+BasePoints:[1] = new Vector3(22.82f,-59.67f,0.0f);
+BasePoints:[2] = new Vector3(63.09f,10.07f,0.0f);
+BasePoints:[3] = new Vector3(40.27f,49.60f,0.0f);
+BasePoints:[4] = new Vector3(-40.27f,49.60f,0.0f);
+BasePoints:[5] = new Vector3(-63.09f,10.07f,0.0f);
+
