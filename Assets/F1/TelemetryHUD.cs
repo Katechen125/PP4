@@ -9,36 +9,21 @@ public class TelemetryHUD : MonoBehaviour
 
     [Header("Speed Display")]
     public TextMeshProUGUI speedText;
-    public Image speedBar;
-    public float maxSpeed = 200f; // km/h
+    public DiagonalSpeedBar speedBar;
 
-    [Header("Colors")]
-    public Color slowColor = new Color(0.1f, 0.9f, 0.1f); // green
-    public Color midColor = new Color(1.0f, 0.8f, 0.0f); // yellow
-    public Color fastColor = new Color(0.9f, 0.1f, 0.1f); // red
+    [Header("Speed Settings")]
+    public float maxSpeed = 180f; // matches engine sound max in CarControl
 
     void Update()
     {
         if (carRigidbody == null) return;
 
-        // Get speed in km/h
-        float speedMS = carRigidbody.linearVelocity.magnitude;
-        float speedKMH = speedMS * 3.6f;
+        float speedKMH = carRigidbody.linearVelocity.magnitude * 3.6f;
+        float t = Mathf.Clamp01(speedKMH / maxSpeed);
 
-        // Update speed number
         speedText.text = Mathf.RoundToInt(speedKMH) + " km/h";
 
-        // Update bar fill
-        float t = Mathf.Clamp01(speedKMH / maxSpeed);
-        speedBar.fillAmount = t;
-
-        // Color gradient green -> yellow -> red
-        Color barColor;
-        if (t < 0.5f)
-            barColor = Color.Lerp(slowColor, midColor, t * 2f);
-        else
-            barColor = Color.Lerp(midColor, fastColor, (t - 0.5f) * 2f);
-
-        speedBar.color = barColor;
+        if (speedBar != null)
+            speedBar.SetFill(t);
     }
 }

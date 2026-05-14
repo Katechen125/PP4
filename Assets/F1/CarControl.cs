@@ -9,82 +9,96 @@ public class CarControl : MonoBehaviour
     public float steeringRange = 30f;
     public float steeringRangeAtMaxSpeed = 10f;
     public float centreOfGravityOffset = -1f;
+    public AudioSource Engine;
+
+    public bool raceStarted = false;
 
     private WheelControl[] wheels;
     private Rigidbody rigidBody;
-
-    private CarInputActions carControls; // Reference to the new input system
+    private CarInputActions carControls;
 
     void Awake()
     {
-        carControls = new CarInputActions(); // Initialize Input Actions
-    }
-    void OnEnable()
-    {
-        carControls.Enable();
+        carControls = new CarInputActions();
+        PlatformController.singleton.Init("COM5", 115200);
     }
 
-    void OnDisable()
-    {
-        carControls.Disable();
-    }
+    void OnEnable() { carControls.Enable(); }
+    void OnDisable() { carControls.Disable(); }
 
-    // Start is called before the first frame update
     void Start()
     {
         rigidBody = GetComponent<Rigidbody>();
 
-        // Adjust center of mass to improve stability and prevent rolling
         Vector3 centerOfMass = rigidBody.centerOfMass;
         centerOfMass.y += centreOfGravityOffset;
         rigidBody.centerOfMass = centerOfMass;
 
-        // Get all wheel components attached to the car
         wheels = GetComponentsInChildren<WheelControl>();
+
+        if (Engine != null)
+        {
+            Engine.loop = true;
+            Engine.Play();
+        }
     }
 
-    // FixedUpdate is called at a fixed time interval
     void FixedUpdate()
     {
-        // Read the Vector2 input from the new Input System
+        // Platform and audio always run regardless of race state
+        Vector3 localAngVelocity = transform.InverseTransformDirection(
+            rigidBody.angularVelocity);
+        float rollAngle = Mathf.DeltaAngle(transform.eulerAngles.z, 0);
+
+        PlatformController.singleton.Yaw = localAngVelocity.y * 10;
+
+        if (!GameManager.Instance.isCrashing)
+            PlatformController.singleton.Roll = Mathf.Lerp(
+                PlatformController.singleton.Roll, -rollAngle, Time.deltaTime);
+
+        float speedKMH = rigidBody.linearVelocity.magnitude * 3.6f;
+        if (Engine != null)
+            Engine.pitch = 0.4f + (speedKMH / 180f) * 0.8f;
+
+        // Block movement before race starts
+        if (!raceStarted)
+        {
+            foreach (var wheel in wheels)
+            {
+                wheel.WheelCollider.motorTorque = 0f;
+                wheel.WheelCollider.brakeTorque = brakeTorque;
+            }
+            return;
+        }
+
+     
         Vector2 inputVector = carControls.Car.Movement.ReadValue<Vector2>();
 
-        // Get player input for acceleration and steering
-        float vInput = inputVector.y; // Forward/backward input
-        float hInput = inputVector.x; // Steering input
+        float vInput = inputVector.y;
+        float hInput = inputVector.x;
 
-        // Calculate current speed along the car's forward axis
         float forwardSpeed = Vector3.Dot(transform.forward, rigidBody.linearVelocity);
-        float speedFactor = Mathf.InverseLerp(0, maxSpeed, Mathf.Abs(forwardSpeed)); // Normalized speed factor
+        float speedFactor = Mathf.InverseLerp(0, maxSpeed, Mathf.Abs(forwardSpeed));
 
-        // Reduce motor torque and steering at high speeds for better handling
         float currentMotorTorque = Mathf.Lerp(motorTorque, 0, speedFactor);
-        float currentSteerRange = Mathf.Lerp(steeringRange, steeringRangeAtMaxSpeed, speedFactor);
+        float currentSteerRange = Mathf.Lerp(steeringRange,
+            steeringRangeAtMaxSpeed, speedFactor);
 
-        // Determine if the player is accelerating or trying to reverse
         bool isAccelerating = Mathf.Sign(vInput) == Mathf.Sign(forwardSpeed);
 
         foreach (var wheel in wheels)
         {
-            // Apply steering to wheels that support steering
             if (wheel.steerable)
-            {
                 wheel.WheelCollider.steerAngle = hInput * currentSteerRange;
-            }
 
             if (isAccelerating)
             {
-                // Apply torque to motorized wheels
                 if (wheel.motorized)
-                {
                     wheel.WheelCollider.motorTorque = vInput * currentMotorTorque;
-                }
-                // Release brakes when accelerating
                 wheel.WheelCollider.brakeTorque = 0f;
             }
             else
             {
-                // Apply brakes when reversing direction
                 wheel.WheelCollider.motorTorque = 0f;
                 wheel.WheelCollider.brakeTorque = Mathf.Abs(vInput) * brakeTorque;
             }

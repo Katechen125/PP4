@@ -10,7 +10,7 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance;
 
     [Header("Race Settings")]
-    public int totalLaps = 5;
+    public int totalLaps = 2;
     public float threeStarTime = 120f;  // seconds for 3 stars
     public float twoStarTime = 180f;  // seconds for 2 stars
     public float oneStarTime = 999f;  // anything else = 1 star
@@ -22,7 +22,7 @@ public class GameManager : MonoBehaviour
     [Header("Car")]
     public Transform car;
     public Rigidbody carRigidbody;
-    public MonoBehaviour carControl;
+    public CarControl carControl;
 
     [Header("Collision")]
     public float collisionFeedbackDuration = 0.5f;
@@ -54,6 +54,9 @@ public class GameManager : MonoBehaviour
     // Leaderboard
     private List<float> leaderboard = new List<float>();
     private const string LeaderboardKey = "Leaderboard";
+
+    //Crash
+    public bool isCrashing = false;
 
     void Awake()
     {
@@ -109,20 +112,21 @@ public class GameManager : MonoBehaviour
 
         float dist = Vector3.Distance(
             new Vector3(car.position.x, 0, car.position.z),
-            new Vector3(startFinishLine.position.x, 0, startFinishLine.position.z)
+            new Vector3(startFinishLine.position.x, 0,
+                startFinishLine.position.z)
         );
 
-        bool crossingNow = dist < lapTriggerDistance;
+        // Show distance in console so we can tune it
+        if (raceStarted)
+            Debug.Log($"Distance to line: {dist:F1}m | LapTimer: {lapTimer:F1}s");
 
-        // Only trigger once per crossing
-        if (crossingNow && !crossedLineLastFrame && lapTimer > 5f)
-        {
+        bool crossingNow = dist < lapTriggerDistance && lapTimer > 5f;
+
+        if (crossingNow && !crossedLineLastFrame)
             CompleteLap();
-        }
 
         crossedLineLastFrame = crossingNow;
     }
-
     void CompleteLap()
     {
         // Update best lap
@@ -147,7 +151,7 @@ public class GameManager : MonoBehaviour
 
         // Stop car
         if (carControl != null)
-            carControl.enabled = false;
+            carControl.raceStarted = false;
 
         // Calculate stars
         int stars = CalculateStars(raceTimer);
@@ -195,6 +199,27 @@ public class GameManager : MonoBehaviour
     {
         if (!raceStarted || raceFinished) return;
         StartCoroutine(CollisionFeedback(impactForce));
+        float perForce = Mathf.Clamp01((impactForce / 40.0f));
+        StartCoroutine(NshakePlatform(perForce * 10, 2));
+        //print(impactForce);
+    }
+    public void NormalShake(float intensity, float duration)
+    {
+        StartCoroutine(NshakePlatform(intensity, duration));
+    }
+    IEnumerator NshakePlatform(float intensity, float duration) //comes back after running thanks to yield
+    {
+        isCrashing = true;
+        float curTime = duration;
+        while (curTime > 0)
+        {
+            curTime -= Time.deltaTime; //based time, not frame (slower computer == slower "time")
+            float per = curTime / duration;
+            PlatformController.singleton.Pitch = per * Random.Range(-intensity, intensity);
+            PlatformController.singleton.Roll = per * Random.Range(-intensity, intensity);
+            yield return null;
+        }
+        isCrashing = false;
     }
 
     IEnumerator CollisionFeedback(float force)
@@ -247,4 +272,6 @@ public class GameManager : MonoBehaviour
         int ms = (int)((seconds * 1000) % 1000);
         return $"{mins}:{secs:00}.{ms:000}";
     }
+
+
 }

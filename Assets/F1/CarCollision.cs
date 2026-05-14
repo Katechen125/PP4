@@ -2,31 +2,55 @@
 
 public class CarCollision : MonoBehaviour
 {
-    public float minForceThreshold = 15f; // raise this significantly
+    [Header("Collision Settings")]
+    public float minForceThreshold = 10f;
+    public LayerMask ignoreLayers;
 
-    [Header("Ignore these layers")]
-    public LayerMask ignoreLayers; // assign Road and Terrain layers here
+    [Header("Audio")]
+    public AudioSource audioSource;
+    public AudioClip lightCollisionClip;  // small bump
+    public AudioClip heavyCollisionClip;  // big crash
+    public float heavyCollisionThreshold = 40f;
+
+    void Start()
+    {
+        // Auto grab AudioSource if not assigned
+        if (audioSource == null)
+            audioSource = GetComponent<AudioSource>();
+    }
 
     void OnCollisionEnter(Collision collision)
     {
-        // Ignore road and terrain collisions
+        // Ignore specified layers
         if (((1 << collision.gameObject.layer) & ignoreLayers) != 0)
             return;
 
-        // Ignore if it's a wheel collider hitting the ground
-        if (collision.gameObject.name.ToLower().Contains("tarmac"))
-            return;
-        if (collision.gameObject.name.ToLower().Contains("terrain"))
-            return;
-        if (collision.gameObject.name.ToLower().Contains("ground"))
-            return;
+        // Ignore road surface
+        string hitName = collision.gameObject.name.ToLower();
+        if (hitName.Contains("tarmac")) return;
+        if (hitName.Contains("terrain")) return;
+        if (hitName.Contains("ground")) return;
 
         float force = collision.relativeVelocity.magnitude;
 
         if (force > minForceThreshold)
         {
-            Debug.Log($"REAL Collision with {collision.gameObject.name} force: {force}");
+            // Play sound based on impact force
+            if (force >= heavyCollisionThreshold)
+                PlaySound(heavyCollisionClip);
+            else
+                PlaySound(lightCollisionClip);
+
+            // Tell GameManager
             GameManager.Instance?.OnCarCollision(force);
+
+            Debug.Log($"Collision with {collision.gameObject.name} force: {force}");
         }
+    }
+
+    void PlaySound(AudioClip clip)
+    {
+        if (audioSource != null && clip != null)
+            audioSource.PlayOneShot(clip);
     }
 }

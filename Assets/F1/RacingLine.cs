@@ -122,7 +122,6 @@ public class RacingLine : MonoBehaviour
         int startIndex = closestIndex;
         DrawLineAhead(startIndex, speedKMH);
 
-        Debug.Log($"Speed: {carRigidbody.linearVelocity.magnitude * 3.6f} | Alpha: {currentAlpha}");
     }
 
     int GetClosestWaypointIndex()
