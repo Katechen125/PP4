@@ -117,8 +117,8 @@ public class GameManager : MonoBehaviour
         );
 
         // Show distance in console so we can tune it
-        if (raceStarted)
-            Debug.Log($"Distance to line: {dist:F1}m | LapTimer: {lapTimer:F1}s");
+        //if (raceStarted)
+        //    Debug.Log($"Distance to line: {dist:F1}m | LapTimer: {lapTimer:F1}s");
 
         bool crossingNow = dist < lapTriggerDistance && lapTimer > 5f;
 

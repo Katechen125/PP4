@@ -100,11 +100,29 @@ public partial class @CarInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""ShiftUp"",
+                    ""type"": ""Button"",
+                    ""id"": ""af03c296-3407-4578-aaab-bd71b016d479"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""ShiftDown"",
+                    ""type"": ""Button"",
+                    ""id"": ""54284b2f-772a-4a88-a09f-48774ce986dc"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
                 {
-                    ""name"": ""2D Vector"",
+                    ""name"": ""Keyboard"",
                     ""id"": ""3f257e19-4471-4f23-b5ae-c1e380fb9372"",
                     ""path"": ""2DVector"",
                     ""interactions"": """",
@@ -157,6 +175,105 @@ public partial class @CarInputActions: IInputActionCollection2, IDisposable
                     ""action"": ""Movement"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""Wheel"",
+                    ""id"": ""02f6e3f5-7863-498b-a895-6ac16d9196d5"",
+                    ""path"": ""2DVector(mode=2)"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Movement"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""up"",
+                    ""id"": ""f5026576-e0c1-4e9b-9b25-51295394700e"",
+                    ""path"": ""<HID::Logitech Inc. WingMan Formula Force GP>/stick/up"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Movement"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""down"",
+                    ""id"": ""259b0588-942c-4047-b32d-d7ab84637852"",
+                    ""path"": ""<HID::Logitech Inc. WingMan Formula Force GP>/stick/down"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Movement"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""left"",
+                    ""id"": ""ab55ae1e-9de9-42d1-82f4-20370e260f56"",
+                    ""path"": ""<HID::Logitech Inc. WingMan Formula Force GP>/stick/left"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Movement"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""right"",
+                    ""id"": ""ddf9f780-701b-4060-829d-3e3f7d404db7"",
+                    ""path"": ""<HID::Logitech Inc. WingMan Formula Force GP>/stick/right"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Movement"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""89305da9-2127-48e8-bc72-29b1622baa63"",
+                    ""path"": ""<HID::Logitech Inc. WingMan Formula Force GP>/button2"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ShiftUp"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""aa26c985-e448-450c-81f9-166367863a95"",
+                    ""path"": ""<Keyboard>/e"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ShiftUp"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b7c4a113-18c5-4c24-97b1-8520e6497a39"",
+                    ""path"": ""<HID::Logitech Inc. WingMan Formula Force GP>/trigger"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ShiftDown"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b0d9f604-2e22-43ee-a13a-b2acac7f07ee"",
+                    ""path"": ""<Keyboard>/q"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ShiftDown"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -166,6 +283,8 @@ public partial class @CarInputActions: IInputActionCollection2, IDisposable
         // Car
         m_Car = asset.FindActionMap("Car", throwIfNotFound: true);
         m_Car_Movement = m_Car.FindAction("Movement", throwIfNotFound: true);
+        m_Car_ShiftUp = m_Car.FindAction("ShiftUp", throwIfNotFound: true);
+        m_Car_ShiftDown = m_Car.FindAction("ShiftDown", throwIfNotFound: true);
     }
 
     ~@CarInputActions()
@@ -247,6 +366,8 @@ public partial class @CarInputActions: IInputActionCollection2, IDisposable
     private readonly InputActionMap m_Car;
     private List<ICarActions> m_CarActionsCallbackInterfaces = new List<ICarActions>();
     private readonly InputAction m_Car_Movement;
+    private readonly InputAction m_Car_ShiftUp;
+    private readonly InputAction m_Car_ShiftDown;
     /// <summary>
     /// Provides access to input actions defined in input action map "Car".
     /// </summary>
@@ -262,6 +383,14 @@ public partial class @CarInputActions: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Car/Movement".
         /// </summary>
         public InputAction @Movement => m_Wrapper.m_Car_Movement;
+        /// <summary>
+        /// Provides access to the underlying input action "Car/ShiftUp".
+        /// </summary>
+        public InputAction @ShiftUp => m_Wrapper.m_Car_ShiftUp;
+        /// <summary>
+        /// Provides access to the underlying input action "Car/ShiftDown".
+        /// </summary>
+        public InputAction @ShiftDown => m_Wrapper.m_Car_ShiftDown;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -291,6 +420,12 @@ public partial class @CarInputActions: IInputActionCollection2, IDisposable
             @Movement.started += instance.OnMovement;
             @Movement.performed += instance.OnMovement;
             @Movement.canceled += instance.OnMovement;
+            @ShiftUp.started += instance.OnShiftUp;
+            @ShiftUp.performed += instance.OnShiftUp;
+            @ShiftUp.canceled += instance.OnShiftUp;
+            @ShiftDown.started += instance.OnShiftDown;
+            @ShiftDown.performed += instance.OnShiftDown;
+            @ShiftDown.canceled += instance.OnShiftDown;
         }
 
         /// <summary>
@@ -305,6 +440,12 @@ public partial class @CarInputActions: IInputActionCollection2, IDisposable
             @Movement.started -= instance.OnMovement;
             @Movement.performed -= instance.OnMovement;
             @Movement.canceled -= instance.OnMovement;
+            @ShiftUp.started -= instance.OnShiftUp;
+            @ShiftUp.performed -= instance.OnShiftUp;
+            @ShiftUp.canceled -= instance.OnShiftUp;
+            @ShiftDown.started -= instance.OnShiftDown;
+            @ShiftDown.performed -= instance.OnShiftDown;
+            @ShiftDown.canceled -= instance.OnShiftDown;
         }
 
         /// <summary>
@@ -352,5 +493,19 @@ public partial class @CarInputActions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnMovement(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "ShiftUp" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnShiftUp(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "ShiftDown" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnShiftDown(InputAction.CallbackContext context);
     }
 }
