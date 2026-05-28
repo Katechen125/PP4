@@ -8,43 +8,99 @@ public class CarCollision : MonoBehaviour
 
     [Header("Audio")]
     public AudioSource audioSource;
-    public AudioClip lightCollisionClip;  // small bump
-    public AudioClip heavyCollisionClip;  // big crash
+    public AudioClip lightCollisionClip;
+    public AudioClip heavyCollisionClip;
+
     public float heavyCollisionThreshold = 40f;
 
     void Start()
     {
-        // Auto grab AudioSource if not assigned
         if (audioSource == null)
             audioSource = GetComponent<AudioSource>();
     }
 
     void OnCollisionEnter(Collision collision)
     {
-        // Ignore specified layers
+        // Ignore layers
         if (((1 << collision.gameObject.layer) & ignoreLayers) != 0)
             return;
 
-        // Ignore road surface
-        string hitName = collision.gameObject.name.ToLower();
-        if (hitName.Contains("tarmac")) return;
-        if (hitName.Contains("terrain")) return;
-        if (hitName.Contains("ground")) return;
+        string hitName =
+            collision.gameObject.name.ToLower();
 
-        float force = collision.relativeVelocity.magnitude;
+        // Ignore road / terrain
+        if (hitName.Contains("tarmac") ||
+            hitName.Contains("terrain") ||
+            hitName.Contains("ground"))
+            return;
 
-        if (force > minForceThreshold)
+        float force =
+            collision.relativeVelocity.magnitude;
+
+        if (force <= minForceThreshold)
+            return;
+
+        // =====================================================
+        // AUDIO
+        // =====================================================
+
+        if (force >= heavyCollisionThreshold)
+            PlaySound(heavyCollisionClip);
+        else
+            PlaySound(lightCollisionClip);
+
+        // Camera shake / effects
+        GameManager.Instance?.OnCarCollision(force);
+
+        GameObject hit = collision.gameObject;
+
+        // =====================================================
+        // AI CAR DETECTION
+        // =====================================================
+
+        PhysicsAICar aiCar =
+            hit.GetComponent<PhysicsAICar>() ??
+            hit.GetComponentInParent<PhysicsAICar>() ??
+            hit.GetComponentInChildren<PhysicsAICar>();
+
+        if (aiCar != null)
         {
-            // Play sound based on impact force
-            if (force >= heavyCollisionThreshold)
-                PlaySound(heavyCollisionClip);
-            else
-                PlaySound(lightCollisionClip);
+            PenaltyManager.Instance?.CarHitOtherCar(force);
 
-            // Tell GameManager
-            GameManager.Instance?.OnCarCollision(force);
+            Debug.Log(
+                $"Hit AI car: {hit.name} | Force: {force:F1}"
+            );
 
-            Debug.Log($"Collision with {collision.gameObject.name} force: {force}");
+            return;
+        }
+
+        // =====================================================
+        // WALL DETECTION
+        // =====================================================
+
+        string hitTag = hit.tag;
+
+        if (hitTag == "Untagged" &&
+            hit.transform.parent != null)
+        {
+            hitTag = hit.transform.parent.tag;
+        }
+
+        bool isWall =
+            hitTag == "Wall" ||
+            hitName.Contains("wall") ||
+            hitName.Contains("barrier") ||
+            hitName.Contains("fence") ||
+            hitName.Contains("tire") ||
+            hitName.Contains("guardrail");
+
+        if (isWall)
+        {
+            PenaltyManager.Instance?.CarHitWall(force);
+
+            Debug.Log(
+                $"Wall hit: {hit.name} | Force: {force:F1}"
+            );
         }
     }
 

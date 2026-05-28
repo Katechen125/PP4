@@ -3,19 +3,21 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 3
-  tags: []
+  tags:
+  - Wall
+  - AICar
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Car
   - Water
   - UI
   - Track
-  - 
-  - 
-  - 
-  - 
+  - MiniMap
+  - track_map
+  - AIObstacle
+  - Penalty
   - 
   - 
   - 

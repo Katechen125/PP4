@@ -11,13 +11,8 @@ public class GameManager : MonoBehaviour
 
     [Header("Race Settings")]
     public int totalLaps = 2;
-    public float threeStarTime = 120f;  // seconds for 3 stars
-    public float twoStarTime = 180f;  // seconds for 2 stars
-    public float oneStarTime = 999f;  // anything else = 1 star
-
-    [Header("Lap Detection")]
-    public Transform startFinishLine;   // empty GameObject on the start line
-    public float lapTriggerDistance = 10f;
+    public float threeStarTime = 120f;
+    public float twoStarTime = 180f;
 
     [Header("Car")]
     public Transform car;
@@ -33,14 +28,19 @@ public class GameManager : MonoBehaviour
     public TextMeshProUGUI bestLapText;
     public GameObject collisionFeedbackPanel;
     public Image collisionFlash;
+    public TextMeshProUGUI currentLapText;
 
     [Header("End Screen")]
     public GameObject endScreenPanel;
     public TextMeshProUGUI finalTimeText;
-    public TextMeshProUGUI starsText;
+    public TextMeshProUGUI scoreText;
+    public StarDisplay starDisplay;
     public TextMeshProUGUI leaderboardText;
     public Button replayButton;
     public Button quitButton;
+
+    [Header("End Screen Timing")]
+    public float endScreenDelay = 4f;
 
     // State
     private int currentLap = 0;
@@ -49,13 +49,14 @@ public class GameManager : MonoBehaviour
     private float bestLapTime = Mathf.Infinity;
     private bool raceStarted = false;
     private bool raceFinished = false;
-    private bool crossedLineLastFrame = false;
+    private bool hasCrossedStartLine = false;
+    private float lapCooldown = 0f;
 
     // Leaderboard
     private List<float> leaderboard = new List<float>();
     private const string LeaderboardKey = "Leaderboard";
 
-    //Crash
+    // Crash
     public bool isCrashing = false;
 
     void Awake()
@@ -72,67 +73,89 @@ public class GameManager : MonoBehaviour
         timerText.text = "0:00.000";
         bestLapText.text = "BEST --:--.---";
 
-        replayButton.onClick.AddListener(ReplayRace);
-        quitButton.onClick.AddListener(QuitGame);
+        if (replayButton != null)
+        {
+            replayButton.onClick.RemoveAllListeners();
+            replayButton.onClick.AddListener(ReplayRace);
+        }
+        else
+        {
+            Debug.LogError("[GameManager] replayButton NOT ASSIGNED");
+        }
+
+        if (quitButton != null)
+        {
+            quitButton.onClick.RemoveAllListeners();
+            quitButton.onClick.AddListener(QuitGame);
+        }
+        else
+        {
+            Debug.LogError("[GameManager] quitButton NOT ASSIGNED");
+        }
+
+        // Ensure an EventSystem exists, or buttons can't be clicked
+        if (UnityEngine.EventSystems.EventSystem.current == null)
+        {
+            Debug.LogWarning("[GameManager] No EventSystem found, creating one");
+            GameObject es = new GameObject("EventSystem");
+            es.AddComponent<UnityEngine.EventSystems.EventSystem>();
+            es.AddComponent<UnityEngine.InputSystem.UI.InputSystemUIInputModule>();
+        }
     }
 
-    // Called by StartLights when lights go out
+    public void ReplayRace()
+    {
+        Debug.Log("[GameManager] Replay clicked");
+        Time.timeScale = 1f;
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+    public void QuitGame()
+    {
+        Debug.Log("[GameManager] Quit clicked");
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#else
+    Application.Quit();
+#endif
+    }
+
     public void StartRace()
     {
         raceStarted = true;
+        raceFinished = false;
         currentLap = 1;
         raceTimer = 0f;
         lapTimer = 0f;
-        Debug.Log("RACE STARTED");
+        bestLapTime = Mathf.Infinity;
+        hasCrossedStartLine = false;
+        lapCooldown = 0f;
     }
 
-    void Update()
+
+    public void TriggerLap()
     {
         if (!raceStarted || raceFinished) return;
 
-        raceTimer += Time.deltaTime;
-        lapTimer += Time.deltaTime;
+        if (!hasCrossedStartLine)
+        {
+            hasCrossedStartLine = true;
+            lapTimer = 0f;
+            lapCooldown = 5f;
+            Debug.Log("Crossed start line, lap 1 begins");
+            return;
+        }
 
-        UpdateHUD();
-        CheckLapCompletion();
-    }
+        // Minimum lap time guard
+        if (lapTimer < 15f) return;
+        if (lapCooldown > 0f) return;
 
-    void UpdateHUD()
-    {
-        timerText.text = FormatTime(raceTimer);
-        lapText.text = $"LAP {currentLap} / {totalLaps}";
+        lapCooldown = 5f;
 
-        if (bestLapTime < Mathf.Infinity)
-            bestLapText.text = $"BEST {FormatTime(bestLapTime)}";
-    }
-
-    void CheckLapCompletion()
-    {
-        if (startFinishLine == null || car == null) return;
-
-        float dist = Vector3.Distance(
-            new Vector3(car.position.x, 0, car.position.z),
-            new Vector3(startFinishLine.position.x, 0,
-                startFinishLine.position.z)
-        );
-
-        // Show distance in console so we can tune it
-        //if (raceStarted)
-        //    Debug.Log($"Distance to line: {dist:F1}m | LapTimer: {lapTimer:F1}s");
-
-        bool crossingNow = dist < lapTriggerDistance && lapTimer > 5f;
-
-        if (crossingNow && !crossedLineLastFrame)
-            CompleteLap();
-
-        crossedLineLastFrame = crossingNow;
-    }
-    void CompleteLap()
-    {
-        // Update best lap
         if (lapTimer < bestLapTime)
             bestLapTime = lapTimer;
 
+        Debug.Log($"Lap {currentLap} done: {FormatTime(lapTimer)}");
         lapTimer = 0f;
 
         if (currentLap >= totalLaps)
@@ -142,83 +165,297 @@ public class GameManager : MonoBehaviour
         }
 
         currentLap++;
-        Debug.Log($"Lap {currentLap - 1} complete! Total time: {FormatTime(raceTimer)}");
+        UpdateHUD();
+    }
+
+    void Update()
+    {
+        if (!raceStarted || raceFinished) return;
+
+        raceTimer += Time.deltaTime;
+        lapTimer += Time.deltaTime;
+        lapCooldown -= Time.deltaTime;
+
+        UpdateHUD();
+    }
+
+
+    void UpdateHUD()
+    {
+        timerText.text = FormatTime(raceTimer);
+        lapText.text = $"LAP {currentLap} / {totalLaps}";
+
+        if (currentLapText != null)
+            currentLapText.text = $"LAP  {FormatTime(lapTimer)}";
+
+        if (bestLapTime < Mathf.Infinity)
+            bestLapText.text = $"BEST  {FormatTime(bestLapTime)}";
+        else
+            bestLapText.text = "BEST  --:--.---";
     }
 
     void FinishRace()
     {
         raceFinished = true;
 
-        // Stop car
         if (carControl != null)
             carControl.raceStarted = false;
 
-        // Calculate stars
-        int stars = CalculateStars(raceTimer);
+        PhysicsAICar[] aiCars = FindObjectsByType<PhysicsAICar>(
+            FindObjectsInactive.Exclude);
+        foreach (var ai in aiCars)
+            ai.raceStarted = false;
 
-        // Save to leaderboard
+        int stars = CalculateStars(raceTimer);
+        int score = CalculateScore(raceTimer);
+
         leaderboard.Add(raceTimer);
         leaderboard.Sort();
         if (leaderboard.Count > 10)
             leaderboard.RemoveAt(leaderboard.Count - 1);
-        SaveLeaderboard();
 
-        StartCoroutine(ShowEndScreen(stars));
+        SaveLeaderboard();
+        SaveBestScore(score, raceTimer);
+
+        StartCoroutine(ShowEndScreen(stars, score));
     }
 
-    IEnumerator ShowEndScreen(int stars)
+    IEnumerator ShowEndScreen(int stars, int score)
     {
-        yield return new WaitForSeconds(1.5f);
+        // Longer delay so the player sees the finish moment first
+        yield return new WaitForSeconds(endScreenDelay);
 
         endScreenPanel.SetActive(true);
 
-        finalTimeText.text = $"FINAL TIME\n{FormatTime(raceTimer)}";
+        if (finalTimeText != null)
+            finalTimeText.text = $"TIME  {FormatTime(raceTimer)}";
 
-        // Stars display
-        string starDisplay = "";
-        for (int i = 0; i < 3; i++)
-            starDisplay += i < stars ? "★" : "☆";
-        starsText.text = starDisplay;
+        if (bestLapText != null)
+        {
+            if (bestLapTime < Mathf.Infinity)
+                bestLapText.text = $"BEST LAP  {FormatTime(bestLapTime)}";
+            else
+                bestLapText.text = "BEST LAP  --:--.---";
+        }
 
-        // Leaderboard
+        float starFloat = (score / 100f) * 3f;
+        if (starDisplay != null)
+            starDisplay.SetStars(starFloat);
+
+        StartCoroutine(AnimateScore(score));
+
         string lbText = "LEADERBOARD\n";
+
+        // Show all-time best at top of leaderboard
+        string scene = SceneManager.GetActiveScene().name;
+        float histBest = PlayerPrefs.GetFloat(
+            $"BestRaceTime_{scene}", float.MaxValue);
+        int histScore = PlayerPrefs.GetInt(
+            $"BestScore_{scene}", 0);
+
+        if (histBest < float.MaxValue)
+            lbText += $"ALL-TIME  {FormatTime(histBest)}  ({histScore}/100)\n\n";
+
         for (int i = 0; i < Mathf.Min(leaderboard.Count, 5); i++)
-            lbText += $"{i + 1}. {FormatTime(leaderboard[i])}\n";
+            lbText += $"{GetOrdinal(i)}  {FormatTime(leaderboard[i])}\n";
         leaderboardText.text = lbText;
+    }
+
+    void SaveBestScore(int score, float time)
+    {
+        string scene = SceneManager.GetActiveScene().name;
+
+        float bestTime = PlayerPrefs.GetFloat(
+            $"BestRaceTime_{scene}", float.MaxValue);
+        int bestScore = PlayerPrefs.GetInt(
+            $"BestScore_{scene}", 0);
+
+        bool improved = false;
+
+        if (time < bestTime)
+        {
+            PlayerPrefs.SetFloat($"BestRaceTime_{scene}", time);
+            improved = true;
+        }
+
+        if (score > bestScore)
+        {
+            PlayerPrefs.SetInt($"BestScore_{scene}", score);
+            improved = true;
+        }
+
+        if (bestLapTime < Mathf.Infinity)
+        {
+            float savedBestLap = PlayerPrefs.GetFloat(
+                $"BestLap_{scene}", float.MaxValue);
+            if (bestLapTime < savedBestLap)
+                PlayerPrefs.SetFloat($"BestLap_{scene}", bestLapTime);
+        }
+
+        if (improved)
+            PlayerPrefs.Save();
+    }
+
+    void SaveLeaderboard()
+    {
+        string scene = SceneManager.GetActiveScene().name;
+
+        // Wipe old entries first
+        int oldCount = PlayerPrefs.GetInt(
+            $"{LeaderboardKey}_{scene}_count", 0);
+        for (int i = 0; i < oldCount; i++)
+            PlayerPrefs.DeleteKey($"{LeaderboardKey}_{scene}_{i}");
+
+        // Write fresh entries
+        for (int i = 0; i < leaderboard.Count; i++)
+            PlayerPrefs.SetFloat(
+                $"{LeaderboardKey}_{scene}_{i}", leaderboard[i]);
+
+        PlayerPrefs.SetInt(
+            $"{LeaderboardKey}_{scene}_count", leaderboard.Count);
+        PlayerPrefs.Save();
+
+        Debug.Log($"[Leaderboard] Saved {leaderboard.Count} entries");
+    }
+
+    void LoadLeaderboard()
+    {
+        string scene = SceneManager.GetActiveScene().name;
+        leaderboard.Clear();
+
+        int count = PlayerPrefs.GetInt(
+            $"{LeaderboardKey}_{scene}_count", 0);
+
+        for (int i = 0; i < count; i++)
+        {
+            float t = PlayerPrefs.GetFloat(
+                $"{LeaderboardKey}_{scene}_{i}", -1f);
+            if (t > 0) leaderboard.Add(t);
+        }
+
+        leaderboard.Sort();
+        Debug.Log($"[Leaderboard] Loaded {leaderboard.Count} entries");
+    }
+    string GetOrdinal(int i)
+    {
+        switch (i)
+        {
+            case 0: return "1st";
+            case 1: return "2nd";
+            case 2: return "3rd";
+            default: return $"{i + 1}th";
+        }
+    }
+
+
+    IEnumerator AnimateScore(int targetScore)
+    {
+        float duration = 1.5f;
+        float elapsed = 0f;
+
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            int displayed = Mathf.RoundToInt(
+                Mathf.Lerp(0, targetScore, elapsed / duration));
+
+            // Use scoreText — separate from finalTimeText
+            if (scoreText != null)
+                scoreText.text = $"SCORE: {displayed}/100";
+
+            yield return null;
+        }
+
+        if (scoreText != null)
+            scoreText.text = $"SCORE: {targetScore}/100";
+    }
+
+    int CalculateScore(float time)
+    {
+        // Total time score
+        float totalScore;
+        if (time <= threeStarTime)
+            totalScore = 100f;
+        else if (time <= twoStarTime)
+        {
+            float t = Mathf.InverseLerp(threeStarTime, twoStarTime, time);
+            totalScore = Mathf.Lerp(100f, 65f, t);
+        }
+        else
+        {
+            float oneStarTime = twoStarTime * 1.4f;
+            float t = Mathf.InverseLerp(twoStarTime, oneStarTime, time);
+            totalScore = Mathf.Lerp(65f, 20f, t);
+        }
+
+        // Best lap bonus
+        float lapScore = 50f;
+        if (bestLapTime < Mathf.Infinity && totalLaps > 0)
+        {
+            float idealLap = threeStarTime / totalLaps;
+            float worstLap = twoStarTime / totalLaps;
+
+            if (bestLapTime <= idealLap)
+                lapScore = 100f;
+            else if (bestLapTime <= worstLap)
+            {
+                float t = Mathf.InverseLerp(idealLap, worstLap, bestLapTime);
+                lapScore = Mathf.Lerp(100f, 50f, t);
+            }
+            else
+                lapScore = 30f;
+        }
+
+        // Weighted: 70% total time, 30% best lap
+        float combined = (totalScore * 0.7f) + (lapScore * 0.3f);
+        return Mathf.Clamp(Mathf.RoundToInt(combined), 0, 100);
     }
 
     int CalculateStars(float time)
     {
+        // 3 stars: under threeStarTime AND no penalties is implicit since
+        // penalties already inflate raceTimer
         if (time <= threeStarTime) return 3;
         if (time <= twoStarTime) return 2;
         return 1;
     }
 
-    // Call this from car collision script
     public void OnCarCollision(float impactForce)
     {
         if (!raceStarted || raceFinished) return;
         StartCoroutine(CollisionFeedback(impactForce));
-        float perForce = Mathf.Clamp01((impactForce / 40.0f));
+
+        float perForce = Mathf.Clamp01(impactForce / 40f);
         StartCoroutine(NshakePlatform(perForce * 10, 2));
-        //print(impactForce);
     }
+
     public void NormalShake(float intensity, float duration)
     {
         StartCoroutine(NshakePlatform(intensity, duration));
     }
-    IEnumerator NshakePlatform(float intensity, float duration) //comes back after running thanks to yield
+
+    IEnumerator NshakePlatform(float intensity, float duration)
     {
         isCrashing = true;
         float curTime = duration;
+
         while (curTime > 0)
         {
-            curTime -= Time.deltaTime; //based time, not frame (slower computer == slower "time")
+            curTime -= Time.deltaTime;
             float per = curTime / duration;
-            PlatformController.singleton.Pitch = per * Random.Range(-intensity, intensity);
-            PlatformController.singleton.Roll = per * Random.Range(-intensity, intensity);
+
+            try
+            {
+                PlatformController.singleton.Pitch =
+                    per * Random.Range(-intensity, intensity);
+                PlatformController.singleton.Roll =
+                    per * Random.Range(-intensity, intensity);
+            }
+            catch { }
+
             yield return null;
         }
+
         isCrashing = false;
     }
 
@@ -226,7 +463,6 @@ public class GameManager : MonoBehaviour
     {
         collisionFeedbackPanel.SetActive(true);
 
-        // Flash intensity based on impact force
         float intensity = Mathf.Clamp01(force / 100f);
         collisionFlash.color = new Color(1f, 0f, 0f, intensity * 0.6f);
 
@@ -235,34 +471,15 @@ public class GameManager : MonoBehaviour
         collisionFeedbackPanel.SetActive(false);
     }
 
-    void ReplayRace()
+    public void AddPenalty(float seconds)
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-    }
+        raceTimer += seconds;
+        Debug.Log($"Penalty: +{seconds}s | Total time: {FormatTime(raceTimer)}");
 
-    void QuitGame()
-    {
-        Application.Quit();
-#if UNITY_EDITOR
-        UnityEditor.EditorApplication.isPlaying = false;
-#endif
-    }
-
-    // Leaderboard persistence
-    void SaveLeaderboard()
-    {
-        for (int i = 0; i < leaderboard.Count; i++)
-            PlayerPrefs.SetFloat($"{LeaderboardKey}_{i}", leaderboard[i]);
-        PlayerPrefs.SetInt($"{LeaderboardKey}_count", leaderboard.Count);
-        PlayerPrefs.Save();
-    }
-
-    void LoadLeaderboard()
-    {
-        leaderboard.Clear();
-        int count = PlayerPrefs.GetInt($"{LeaderboardKey}_count", 0);
-        for (int i = 0; i < count; i++)
-            leaderboard.Add(PlayerPrefs.GetFloat($"{LeaderboardKey}_{i}"));
+        // Show on telemetry HUD
+        TelemetryHUD hud = FindAnyObjectByType<TelemetryHUD>();
+        if (hud != null)
+            hud.AddPenaltyDisplay(seconds);
     }
 
     string FormatTime(float seconds)
@@ -272,6 +489,5 @@ public class GameManager : MonoBehaviour
         int ms = (int)((seconds * 1000) % 1000);
         return $"{mins}:{secs:00}.{ms:000}";
     }
-
 
 }

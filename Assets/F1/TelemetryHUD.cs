@@ -12,7 +12,11 @@ public class TelemetryHUD : MonoBehaviour
     public DiagonalSpeedBar speedBar;
 
     [Header("Speed Settings")]
-    public float maxSpeed = 180f; // matches engine sound max in CarControl
+    public float maxSpeed = 180f;
+
+    [Header("Penalty Display")]
+    public TextMeshProUGUI penaltyTimeText;
+    private float totalPenalties = 0f;
 
     void Update()
     {
@@ -25,5 +29,24 @@ public class TelemetryHUD : MonoBehaviour
 
         if (speedBar != null)
             speedBar.SetFill(t);
+    }
+
+    // Called by GameManager when penalty added
+    public void AddPenaltyDisplay(float seconds)
+    {
+        totalPenalties += seconds;
+
+        if (penaltyTimeText != null)
+        {
+            penaltyTimeText.text = $"+{totalPenalties:F0}s";
+            penaltyTimeText.color = Color.red;
+        }
+    }
+
+    public void ResetPenalties()
+    {
+        totalPenalties = 0f;
+        if (penaltyTimeText != null)
+            penaltyTimeText.text = "";
     }
 }

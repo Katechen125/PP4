@@ -23,6 +23,7 @@ public class StartLights : MonoBehaviour
     [Header("Car")]
     public GameObject carObject;
     public CarControl carControl;
+
     private Material matA;
     private Material matB;
     private Material matC;
@@ -44,65 +45,44 @@ public class StartLights : MonoBehaviour
         SetLight(matB, offColor);
         SetLight(matC, offColor);
 
-        // Lock car using flag — input stays warm
+        // Player can free-roll until the sequence begins
         if (carControl != null)
             carControl.raceStarted = false;
 
         StartCoroutine(LightsSequence());
     }
 
-    IEnumerator LaunchHeave()
-    {
-        // Quick drop then rise — like the car launching forward
-        float duration = 0.6f;
-        float elapsed = 0f;
-
-        while (elapsed < duration)
-        {
-            elapsed += Time.deltaTime;
-            float t = elapsed / duration;
-
-            // Heave curve: dip down then spring up
-            float heave = Mathf.Sin(t * Mathf.PI) * -8f;
-            PlatformController.singleton.Heave = heave;
-
-            yield return null;
-        }
-
-        // Return to neutral
-        PlatformController.singleton.Heave = 0f;
-    }
-
     IEnumerator LightsSequence()
     {
         yield return new WaitForSeconds(1f);
 
-        // Play full sequence audio once
+        // Audio sequence begins NOW — arm false start at this moment
+        PenaltyManager.Instance?.ArmFalseStartCheck();
+
         audioSource.clip = fullSequenceClip;
         audioSource.Play();
 
-        // Beep 1 — light A
+        // Beep 1 — light A on
         yield return new WaitForSeconds(beep1Time);
         SetLight(matA, onColor);
 
         // Beep 2
         yield return new WaitForSeconds(beep2Time - beep1Time);
 
-        // Beep 3 — light B
+        // Beep 3 — light B on
         yield return new WaitForSeconds(beep3Time - beep2Time);
         SetLight(matB, onColor);
 
         // Beep 4
         yield return new WaitForSeconds(beep4Time - beep3Time);
 
-        // Beep 5 — light C
+        // Beep 5 — light C on
         yield return new WaitForSeconds(beep5Time - beep4Time);
         SetLight(matC, onColor);
 
-        // Wait until lights out moment in audio
+        // Wait until lights out
         yield return new WaitForSeconds(lightsOutTime - beep5Time);
 
-        // LIGHTS OUT — instant release, zero delay
         SetLight(matA, offColor);
         SetLight(matB, offColor);
         SetLight(matC, offColor);
@@ -110,8 +90,14 @@ public class StartLights : MonoBehaviour
         if (carControl != null)
             carControl.raceStarted = true;
 
+        Debug.Log("Releasing AI cars...");
+        PhysicsAICar[] aiCars = FindObjectsByType<PhysicsAICar>(
+            FindObjectsInactive.Exclude);
+        foreach (var ai in aiCars)
+            ai.OnRaceStart();
+
         GameManager.Instance?.StartRace();
-        StartCoroutine(LaunchHeave());
+        PenaltyManager.Instance?.OnLightsOut();
         Debug.Log("LIGHTS OUT — GO!");
     }
 
