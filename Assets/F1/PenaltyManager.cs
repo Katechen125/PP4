@@ -13,6 +13,16 @@ public class PenaltyManager : MonoBehaviour
     public Rigidbody carRigidbody;
     public CarControl carControl;
 
+    [Header("Wheel Colliders (for off-track detection)")]
+    public WheelCollider frontLeftWheel;
+    public WheelCollider frontRightWheel;
+    public WheelCollider rearLeftWheel;
+    public WheelCollider rearRightWheel;
+
+    [Header("Layers")]
+    public LayerMask penaltyLayer;
+    public LayerMask wallLayer;
+
     [Header("Waypoints")]
     public Transform waypointParent;
 
@@ -20,6 +30,7 @@ public class PenaltyManager : MonoBehaviour
     public float wrongWayTime = 2f;
     public float minCrashForce = 10f;
     public float falseStartCreepSpeed = 0.8f;
+    public int wheelsOffTrackThreshold = 4;
 
     [Header("Penalty Values (seconds)")]
     public float falseStartPenalty = 5f;
@@ -30,7 +41,10 @@ public class PenaltyManager : MonoBehaviour
 
     [Header("Cooldowns")]
     public float collisionCooldown = 2f;
-    public float offTrackCooldown = 4f;     // so driving on grass doesn't spam
+    public float offTrackCooldown = 4f;
+
+    [Header("Display Duration")]
+    public float penaltyDisplayTime = 2.5f;
 
     [Header("UI")]
     public GameObject penaltyPanel;
@@ -50,12 +64,12 @@ public class PenaltyManager : MonoBehaviour
     private float collisionTimer = 0f;
     private float offTrackTimer = 0f;
 
-    // Queue so no penalty is ever lost while one is displaying
     private Queue<(string msg, Color color, float amount)> penaltyQueue
         = new Queue<(string, Color, float)>();
     private bool penaltyShowing = false;
 
     private Transform[] waypoints;
+    private WheelCollider[] allWheels;
 
     void Awake()
     {
@@ -64,28 +78,102 @@ public class PenaltyManager : MonoBehaviour
 
     void Start()
     {
+        // Hard validate every reference
         if (penaltyPanel == null)
+        {
             Debug.LogError("[PenaltyManager] penaltyPanel NOT ASSIGNED");
+            return;
+        }
         if (penaltyText == null)
             Debug.LogError("[PenaltyManager] penaltyText NOT ASSIGNED");
 
         penaltyPanel.SetActive(false);
 
+        // Confirm the panel canvas is on a high sort order
+        Canvas c = penaltyPanel.GetComponentInParent<Canvas>();
+        if (c != null)
+            Debug.Log($"[PenaltyManager] Panel canvas sort order: {c.sortingOrder}");
+
+        allWheels = new WheelCollider[]
+        {
+            frontLeftWheel, frontRightWheel,
+            rearLeftWheel,  rearRightWheel
+        };
+
+        // Warn about any unassigned wheels
+        for (int i = 0; i < allWheels.Length; i++)
+        {
+            if (allWheels[i] == null)
+                Debug.LogWarning($"[PenaltyManager] Wheel {i} is not assigned");
+        }
+
+        if (waypointParent != null)
+        {
+            waypoints = new Transform[waypointParent.childCount];
+            for (int i = 0; i < waypointParent.childCount; i++)
+                waypoints[i] = waypointParent.GetChild(i);
+        }
+        else
+        {
+            Debug.LogWarning("[PenaltyManager] waypointParent not assigned, " +
+                             "wrong way detection disabled");
+        }
     }
 
     void Update()
     {
-        // Tick cooldowns
         if (collisionTimer > 0f) collisionTimer -= Time.deltaTime;
         if (offTrackTimer > 0f) offTrackTimer -= Time.deltaTime;
 
-        // False start window
         if (armedForFalseStart && !lightsOut && !falseStartTriggered)
             CheckFalseStartPassive();
 
         if (!raceStarted || !checkingStarted) return;
 
+        CheckOffTrackByWheels();
         CheckWrongWay();
+    }
+
+    // =========================================================
+    // OFF TRACK — wheel ground check against Penalty layer
+    // =========================================================
+
+    void CheckOffTrackByWheels()
+    {
+        if (offTrackTimer > 0f) return;
+        if (allWheels == null) return;
+
+        int wheelsOnPenalty = 0;
+        int wheelsGrounded = 0;
+
+        foreach (WheelCollider wheel in allWheels)
+        {
+            if (wheel == null) continue;
+
+            if (wheel.GetGroundHit(out WheelHit hit))
+            {
+                wheelsGrounded++;
+                int hitLayer = hit.collider.gameObject.layer;
+                bool onPenalty = ((1 << hitLayer) & penaltyLayer.value) != 0;
+
+                if (onPenalty)
+                    wheelsOnPenalty++;
+            }
+        }
+
+        // Only check if car is actually on the ground
+        if (wheelsGrounded == 0) return;
+
+        if (wheelsOnPenalty >= wheelsOffTrackThreshold)
+        {
+            offTrackTimer = offTrackCooldown;
+            Debug.Log($"[PenaltyManager] Off track! " +
+                      $"{wheelsOnPenalty}/{wheelsGrounded} wheels on penalty layer");
+            RegisterPenalty(
+                "CAR OFF TRACK",
+                offTrackPenalty,
+                new Color(1f, 0.75f, 0f));
+        }
     }
 
     // =========================================================
@@ -133,10 +221,9 @@ public class PenaltyManager : MonoBehaviour
     }
 
     // =========================================================
-    // COLLISIONS — called by CarCollision.cs
+    // COLLISIONS
     // =========================================================
 
-    // Player hit an AI car
     public void CarHitOtherCar(float force)
     {
         if (!raceStarted || force < minCrashForce) return;
@@ -149,7 +236,6 @@ public class PenaltyManager : MonoBehaviour
             new Color(0.9f, 0.2f, 0.2f));
     }
 
-    // Player hit a wall
     public void CarHitWall(float force)
     {
         if (!raceStarted || force < minCrashForce) return;
@@ -160,22 +246,6 @@ public class PenaltyManager : MonoBehaviour
             "WALL CONTACT",
             wallHitPenalty,
             new Color(0.9f, 0.4f, 0.1f));
-    }
-
-    // =========================================================
-    // OFF TRACK — called by OffTrackTrigger.cs
-    // =========================================================
-
-    public void TriggerOffTrackInstant()
-    {
-        if (!raceStarted) return;
-        if (offTrackTimer > 0f) return;
-
-        offTrackTimer = offTrackCooldown;
-        RegisterPenalty(
-            "OFF TRACK",
-            offTrackPenalty,
-            new Color(1f, 0.75f, 0f));
     }
 
     // =========================================================
@@ -202,7 +272,6 @@ public class PenaltyManager : MonoBehaviour
         int next = (closest + 1) % waypoints.Length;
         Vector3 wpDir = (waypoints[next].position -
                          waypoints[closest].position).normalized;
-
         float angle = Vector3.Angle(car.forward, wpDir);
 
         if (angle > 110f)
@@ -224,12 +293,16 @@ public class PenaltyManager : MonoBehaviour
     }
 
     // =========================================================
-    // CORE — queue-based so nothing is dropped
+    // CORE
     // =========================================================
 
     public void RegisterPenalty(string reason, float amount, Color color)
     {
         string msg = $"{reason}\n+{amount:F0}s penalty";
+        Debug.Log($"[PenaltyManager] RegisterPenalty: {msg} | " +
+                  $"penaltyShowing={penaltyShowing} | " +
+                  $"queueCount={penaltyQueue.Count}");
+
         penaltyQueue.Enqueue((msg, color, amount));
 
         if (!penaltyShowing)
@@ -243,9 +316,15 @@ public class PenaltyManager : MonoBehaviour
             var (msg, color, amount) = penaltyQueue.Dequeue();
 
             penaltyShowing = true;
+
             penaltyPanel.SetActive(true);
-            penaltyText.text = msg;
-            penaltyText.color = Color.white;
+
+            if (penaltyText != null)
+            {
+                penaltyText.text = msg;
+                penaltyText.color = Color.white;
+                penaltyText.ForceMeshUpdate();
+            }
 
             if (penaltyBG != null)
             {
@@ -256,15 +335,20 @@ public class PenaltyManager : MonoBehaviour
                     backgroundAlpha);
             }
 
+            // Add to race timer
             if (amount > 0)
                 GameManager.Instance?.AddPenalty(amount);
 
-            yield return new WaitForSeconds(2f);
+            // Tell telemetry to log this individual penalty
+            TelemetryHUD hud = FindAnyObjectByType<TelemetryHUD>();
+            if (hud != null)
+                hud.AddPenaltyDisplay(amount);
+
+            yield return new WaitForSeconds(penaltyDisplayTime);
 
             penaltyPanel.SetActive(false);
             penaltyShowing = false;
 
-            // Small gap between back-to-back penalties
             if (penaltyQueue.Count > 0)
                 yield return new WaitForSeconds(0.3f);
         }

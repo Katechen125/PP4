@@ -118,6 +118,33 @@ public partial class @CarInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Replay"",
+                    ""type"": ""Button"",
+                    ""id"": ""28388790-3b9d-413c-b822-0c3bb4507503"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Quit"",
+                    ""type"": ""Button"",
+                    ""id"": ""383cf06c-3af8-4aa0-8b2a-c9fdca1f790e"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Camera"",
+                    ""type"": ""Button"",
+                    ""id"": ""7087d8e9-4287-421f-9165-c88a29438ac8"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -274,6 +301,39 @@ public partial class @CarInputActions: IInputActionCollection2, IDisposable
                     ""action"": ""ShiftDown"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c2971e86-a0b8-4231-9d85-a75652064bed"",
+                    ""path"": ""<HID::Logitech Inc. WingMan Formula Force GP>/button4"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Replay"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""5bef9a15-ceaf-4537-a1fa-35ec6ad9d590"",
+                    ""path"": ""<HID::Logitech Inc. WingMan Formula Force GP>/button3"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Quit"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""ec1a3d03-b2cf-4c8c-a45b-9f2ea1c0efb4"",
+                    ""path"": ""<HID::Logitech Inc. WingMan Formula Force GP>/button6"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Camera"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -285,6 +345,9 @@ public partial class @CarInputActions: IInputActionCollection2, IDisposable
         m_Car_Movement = m_Car.FindAction("Movement", throwIfNotFound: true);
         m_Car_ShiftUp = m_Car.FindAction("ShiftUp", throwIfNotFound: true);
         m_Car_ShiftDown = m_Car.FindAction("ShiftDown", throwIfNotFound: true);
+        m_Car_Replay = m_Car.FindAction("Replay", throwIfNotFound: true);
+        m_Car_Quit = m_Car.FindAction("Quit", throwIfNotFound: true);
+        m_Car_Camera = m_Car.FindAction("Camera", throwIfNotFound: true);
     }
 
     ~@CarInputActions()
@@ -368,6 +431,9 @@ public partial class @CarInputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Car_Movement;
     private readonly InputAction m_Car_ShiftUp;
     private readonly InputAction m_Car_ShiftDown;
+    private readonly InputAction m_Car_Replay;
+    private readonly InputAction m_Car_Quit;
+    private readonly InputAction m_Car_Camera;
     /// <summary>
     /// Provides access to input actions defined in input action map "Car".
     /// </summary>
@@ -391,6 +457,18 @@ public partial class @CarInputActions: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Car/ShiftDown".
         /// </summary>
         public InputAction @ShiftDown => m_Wrapper.m_Car_ShiftDown;
+        /// <summary>
+        /// Provides access to the underlying input action "Car/Replay".
+        /// </summary>
+        public InputAction @Replay => m_Wrapper.m_Car_Replay;
+        /// <summary>
+        /// Provides access to the underlying input action "Car/Quit".
+        /// </summary>
+        public InputAction @Quit => m_Wrapper.m_Car_Quit;
+        /// <summary>
+        /// Provides access to the underlying input action "Car/Camera".
+        /// </summary>
+        public InputAction @Camera => m_Wrapper.m_Car_Camera;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -426,6 +504,15 @@ public partial class @CarInputActions: IInputActionCollection2, IDisposable
             @ShiftDown.started += instance.OnShiftDown;
             @ShiftDown.performed += instance.OnShiftDown;
             @ShiftDown.canceled += instance.OnShiftDown;
+            @Replay.started += instance.OnReplay;
+            @Replay.performed += instance.OnReplay;
+            @Replay.canceled += instance.OnReplay;
+            @Quit.started += instance.OnQuit;
+            @Quit.performed += instance.OnQuit;
+            @Quit.canceled += instance.OnQuit;
+            @Camera.started += instance.OnCamera;
+            @Camera.performed += instance.OnCamera;
+            @Camera.canceled += instance.OnCamera;
         }
 
         /// <summary>
@@ -446,6 +533,15 @@ public partial class @CarInputActions: IInputActionCollection2, IDisposable
             @ShiftDown.started -= instance.OnShiftDown;
             @ShiftDown.performed -= instance.OnShiftDown;
             @ShiftDown.canceled -= instance.OnShiftDown;
+            @Replay.started -= instance.OnReplay;
+            @Replay.performed -= instance.OnReplay;
+            @Replay.canceled -= instance.OnReplay;
+            @Quit.started -= instance.OnQuit;
+            @Quit.performed -= instance.OnQuit;
+            @Quit.canceled -= instance.OnQuit;
+            @Camera.started -= instance.OnCamera;
+            @Camera.performed -= instance.OnCamera;
+            @Camera.canceled -= instance.OnCamera;
         }
 
         /// <summary>
@@ -507,5 +603,26 @@ public partial class @CarInputActions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnShiftDown(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Replay" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnReplay(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Quit" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnQuit(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Camera" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnCamera(InputAction.CallbackContext context);
     }
 }

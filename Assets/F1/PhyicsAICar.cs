@@ -208,7 +208,6 @@ public class PhysicsAICar : MonoBehaviour
     void CompleteLap()
     {
         if (lapTime < bestLap) bestLap = lapTime;
-        Debug.Log($"{gameObject.name} lap {currentLap + 1} in {lapTime:F2}s");
         lapTime = 0f;
         currentLap++;
 

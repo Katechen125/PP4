@@ -3,6 +3,8 @@ using UnityEngine.InputSystem;
 
 public class CameraController : MonoBehaviour
 {
+    public static CameraController Instance;
+
     [Header("Target")]
     public Transform car;
 
@@ -27,6 +29,10 @@ public class CameraController : MonoBehaviour
     // 0 = follow, 1 = driver, 2 = rear, 3 = overview
     private const int TOTAL_VIEWS = 4;
 
+    void Awake()
+    {
+        Instance = this;
+    }
     void Update()
     {
         if (Keyboard.current.cKey.wasPressedThisFrame)

@@ -14,7 +14,7 @@ public class TelemetryHUD : MonoBehaviour
     [Header("Speed Settings")]
     public float maxSpeed = 180f;
 
-    [Header("Penalty Display")]
+
     public TextMeshProUGUI penaltyTimeText;
     private float totalPenalties = 0f;
 

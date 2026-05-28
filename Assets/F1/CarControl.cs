@@ -4,6 +4,11 @@ using System.Collections;
 
 public class CarControl : MonoBehaviour
 {
+    public enum InputMode { Keyboard, DrivingWheel }
+
+    [Header("Input Mode (auto-detected on Start)")]
+    public InputMode inputMode = InputMode.Keyboard;
+
     [Header("Car Properties")]
     public float motorTorque = 2000f;
     public float brakeTorque = 2000f;
@@ -12,6 +17,26 @@ public class CarControl : MonoBehaviour
     public float steeringRangeAtMaxSpeed = 10f;
     public float centreOfGravityOffset = -1f;
     public AudioSource Engine;
+
+    [Header("Steering Feel")]
+    public float steeringSpeed = 8f;
+    public float steeringReturnSpeed = 5f;
+    public float wheelInputExponent = 0.7f;
+    private float currentSteerAngle = 0f;
+
+    // Keyboard presets
+    private const float KB_SteeringSpeed = 8f;
+    private const float KB_SteeringReturnSpeed = 5f;
+    private const float KB_InputExponent = 1.0f;
+    private const float KB_SteeringRange = 30f;
+    private const float KB_SteeringRangeMax = 10f;
+
+    // Driving wheel presets
+    private const float DW_SteeringSpeed = 12f;
+    private const float DW_SteeringReturnSpeed = 6f;
+    private const float DW_InputExponent = 0.65f;
+    private const float DW_SteeringRange = 28f;
+    private const float DW_SteeringRangeMax = 8f;
 
     [Header("Gear System")]
     public int totalGears = 6;
@@ -23,7 +48,7 @@ public class CarControl : MonoBehaviour
     public bool raceStarted = false;
 
     private bool platformConnected = false;
-    private int currentGear = 0; // -1=R, 0=N, 1-6=forward
+    private int currentGear = 0;
     private WheelControl[] wheels;
     private Rigidbody rigidBody;
     private CarInputActions carControls;
@@ -45,7 +70,6 @@ public class CarControl : MonoBehaviour
         carControls = new CarInputActions();
         platformConnected = false;
 
-        // Attempt connection with a real round-trip check
         try
         {
             if (PlatformController.singleton == null)
@@ -56,20 +80,14 @@ public class CarControl : MonoBehaviour
             }
 
             PlatformController.singleton.Init("COM5", 115200);
-
-            // Give the serial port a tiny moment, then probe
             System.Threading.Thread.Sleep(50);
 
-            // Try a write and verify it didn't immediately disconnect
             PlatformController.singleton.Pitch = 0f;
             PlatformController.singleton.Roll = 0f;
             PlatformController.singleton.Yaw = 0f;
             PlatformController.singleton.Heave = 0f;
             PlatformController.singleton.Surge = 0f;
 
-            // If your PlatformController exposes IsOpen / IsConnected, check it.
-            // Adjust this line to whatever property your controller has.
-            // Common patterns: .IsConnected, .IsOpen, .Connected, .Port.IsOpen
             var connectedProp = PlatformController.singleton.GetType()
                 .GetProperty("IsConnected");
             if (connectedProp != null)
@@ -79,7 +97,6 @@ public class CarControl : MonoBehaviour
             }
             else
             {
-                // Fall back: assume connected only if no exception fired
                 platformConnected = true;
             }
 
@@ -94,11 +111,42 @@ public class CarControl : MonoBehaviour
             Debug.LogWarning($"[Platform] Offline — {e.Message}");
         }
     }
+
     void OnEnable() { carControls.Enable(); }
     void OnDisable() { carControls.Disable(); }
 
+  
+    public void ApplyInputPreset()
+    {
+        if (inputMode == InputMode.Keyboard)
+        {
+            steeringSpeed = KB_SteeringSpeed;
+            steeringReturnSpeed = KB_SteeringReturnSpeed;
+            wheelInputExponent = KB_InputExponent;
+            steeringRange = KB_SteeringRange;
+            steeringRangeAtMaxSpeed = KB_SteeringRangeMax;
+            Debug.Log("[CarControl] Keyboard preset applied");
+        }
+        else
+        {
+            steeringSpeed = DW_SteeringSpeed;
+            steeringReturnSpeed = DW_SteeringReturnSpeed;
+            wheelInputExponent = DW_InputExponent;
+            steeringRange = DW_SteeringRange;
+            steeringRangeAtMaxSpeed = DW_SteeringRangeMax;
+            Debug.Log("[CarControl] Driving Wheel preset applied");
+        }
+    }
+
+    // =========================================================
+    // START
+    // =========================================================
+
     void Start()
     {
+        // Just apply whichever mode is set in the inspector
+        ApplyInputPreset();
+
         rigidBody = GetComponent<Rigidbody>();
 
         Vector3 centerOfMass = rigidBody.centerOfMass;
@@ -117,7 +165,10 @@ public class CarControl : MonoBehaviour
         UpdateGearHUD();
     }
 
-    // Safe platform setter — does nothing if platform not connected
+    // =========================================================
+    // PLATFORM
+    // =========================================================
+
     void SetPlatform(string property, float value)
     {
         if (!platformConnected) return;
@@ -135,7 +186,6 @@ public class CarControl : MonoBehaviour
         }
         catch (System.Exception e)
         {
-            // Disable permanently for this session, no spam
             platformConnected = false;
             Debug.LogWarning($"[Platform] Lost connection: {e.Message}");
         }
@@ -145,7 +195,6 @@ public class CarControl : MonoBehaviour
     {
         if (!platformConnected) return;
 
-        // Check if all wheels are off the ground
         bool anyWheelGrounded = false;
         foreach (var wheel in wheels)
         {
@@ -162,57 +211,61 @@ public class CarControl : MonoBehaviour
         if (isAirborne)
         {
             airTime += Time.fixedDeltaTime;
-
-            // The longer in the air the more heave
             float heaveIntensity = Mathf.Clamp(airTime * 3f, 0f, 8f);
-
-            // Oscillate while airborne — bumpy feeling
             float heave = Mathf.Sin(Time.time * 8f) * heaveIntensity;
             SetPlatform("Heave", heave);
-
             wasGrounded = false;
         }
         else if (!wasGrounded && !isAirborne)
         {
-            // Just landed — big thump
             float landingForce = Mathf.Clamp(airTime * 10f, 3f, 12f);
             SetPlatform("Heave", -landingForce);
             Invoke(nameof(ResetHeave), 0.3f);
-
             airTime = 0f;
             wasGrounded = true;
-
-
         }
 
-        // Wall hit detection — sudden lateral velocity change
         float lateralVelocity = Mathf.Abs(
             Vector3.Dot(rigidBody.linearVelocity, transform.right));
 
         if (lateralVelocity > 5f && !GameManager.Instance.isCrashing)
         {
-            // Sideways slam into wall
             float wallForce = Mathf.Clamp(lateralVelocity * 0.5f, 2f, 10f);
             SetPlatform("Heave", wallForce);
             SetPlatform("Roll", lateralVelocity > 0 ? wallForce : -wallForce);
             Invoke(nameof(ResetHeaveAndRoll), 0.25f);
-
-
         }
     }
 
-    void ResetHeave()
-    {
-        SetPlatform("Heave", 0f);
-    }
+    void ResetHeave() { SetPlatform("Heave", 0f); }
 
     void ResetHeaveAndRoll()
     {
         SetPlatform("Heave", 0f);
         SetPlatform("Roll", 0f);
     }
+
+    // =========================================================
+    // UPDATE — input, gear shifts, camera, buttons
+    // =========================================================
+
     void Update()
     {
+        if (SimpleInput.GetKeyDown(KeyCode.M) ||
+            carControls.Car.Replay.WasPerformedThisFrame())
+            GameManager.Instance.ReplayRace();
+
+        if (carControls.Car.Quit.WasPerformedThisFrame())
+           Application.Quit();
+
+        if (carControls.Car.Camera.WasPerformedThisFrame())
+        {
+            if (CameraController.Instance != null)
+                CameraController.Instance.CycleView();
+            else
+                Debug.LogWarning("[CarControl] CameraController.Instance is null");
+        }
+
         bool shiftUp = false;
         bool shiftDown = false;
 
@@ -248,19 +301,18 @@ public class CarControl : MonoBehaviour
 
         if (currentGear > 0)
         {
-            // Upshift — forward lurch
             SetPlatform("Heave", currentGear % 2 == 0 ? 5f : -5f);
             SetPlatform("Surge", -4f);
             Invoke(nameof(ResetPlatformShift), 0.25f);
         }
         else if (currentGear >= 0)
         {
-            // Downshift — backward push from engine braking
             SetPlatform("Surge", 6f);
             SetPlatform("Heave", -3f);
             Invoke(nameof(ResetPlatformShift), 0.3f);
         }
     }
+
     void ResetPlatformShift()
     {
         SetPlatform("Heave", 0f);
@@ -300,14 +352,29 @@ public class CarControl : MonoBehaviour
         return $"G{currentGear}";
     }
 
+    // =========================================================
+    // STEERING CURVE
+    // =========================================================
+
+    float ApplySteeringCurve(float input)
+    {
+        return Mathf.Sign(input) *
+               Mathf.Pow(Mathf.Abs(input), wheelInputExponent);
+    }
+
+    // =========================================================
+    // FIXED UPDATE — physics
+    // =========================================================
+
     void FixedUpdate()
     {
-        // Read input FIRST so gas/brake available throughout
         Vector2 inputVector = carControls.Car.Movement.ReadValue<Vector2>();
-        float hInput = inputVector.x;
+        float rawH = inputVector.x;
         float rawY = inputVector.y;
         float gas = Mathf.Max(0f, rawY);
         float brake = Mathf.Max(0f, -rawY);
+
+        float hInput = ApplySteeringCurve(rawH);
 
         // Platform motion
         Vector3 localAngVelocity = transform.InverseTransformDirection(
@@ -328,56 +395,18 @@ public class CarControl : MonoBehaviour
 
         if (GameManager.Instance != null && !GameManager.Instance.isCrashing)
         {
-            float currentYaw = platformConnected ?
-                PlatformController.singleton.Yaw : 0f;
-            float currentRoll = platformConnected ?
-                PlatformController.singleton.Roll : 0f;
-            float currentPitch = platformConnected ?
-                PlatformController.singleton.Pitch : 0f;
+            float currentYaw = platformConnected ? PlatformController.singleton.Yaw : 0f;
+            float currentRoll = platformConnected ? PlatformController.singleton.Roll : 0f;
+            float currentPitch = platformConnected ? PlatformController.singleton.Pitch : 0f;
 
-            SetPlatform("Yaw", Mathf.Lerp(
-                currentYaw, targetYaw, Time.deltaTime * 8f));
-            SetPlatform("Roll", Mathf.Lerp(
-                currentRoll, targetRoll, Time.deltaTime * 4f));
-            SetPlatform("Pitch", Mathf.Lerp(
-                currentPitch, targetPitch, Time.deltaTime * 6f));
+            SetPlatform("Yaw", Mathf.Lerp(currentYaw, targetYaw, Time.deltaTime * 8f));
+            SetPlatform("Roll", Mathf.Lerp(currentRoll, targetRoll, Time.deltaTime * 4f));
+            SetPlatform("Pitch", Mathf.Lerp(currentPitch, targetPitch, Time.deltaTime * 6f));
         }
 
-        // Engine pitch
         float speedKMH = rigidBody.linearVelocity.magnitude * 3.6f;
         if (Engine != null)
             Engine.pitch = 0.4f + (speedKMH / 180f) * 0.8f;
-
-        // Block before race
-        if (!raceStarted)
-        {
-            foreach (var wheel in wheels)
-            {
-                // Apply gas weakly so player CAN creep forward for a false start
-                if (wheel.motorized && gas > 0.01f)
-                    wheel.WheelCollider.motorTorque = gas * motorTorque * 0.3f;
-                else
-                    wheel.WheelCollider.motorTorque = 0f;
-
-                if (wheel.steerable)
-                    wheel.WheelCollider.steerAngle = hInput * steeringRange;
-
-                // Brake holds the car only when no gas given
-                wheel.WheelCollider.brakeTorque = gas > 0.01f ? 0f : brakeTorque * 0.5f;
-            }
-            return;
-        }
-
-        // Heave
-        UpdateHeave();
-
-        // Platform surge
-        if (gas > 0.1f)
-            SetPlatform("Surge", -gas * 3f);
-        else if (brake > 0.1f)
-            SetPlatform("Surge", brake * 5f);
-        else
-            SetPlatform("Surge", 0f);
 
         float forwardSpeed = Vector3.Dot(
             transform.forward, rigidBody.linearVelocity);
@@ -385,13 +414,52 @@ public class CarControl : MonoBehaviour
         float speedFactor = Mathf.InverseLerp(
             0, maxSpeed, Mathf.Abs(forwardSpeed));
 
-        float currentSteerRange = Mathf.Lerp(
+        float targetSteerRange = Mathf.Lerp(
             steeringRange, steeringRangeAtMaxSpeed, speedFactor);
+
+        float targetSteerAngle = hInput * targetSteerRange;
+
+        float blendSpeed = Mathf.Abs(rawH) > 0.01f
+            ? steeringSpeed
+            : steeringReturnSpeed;
+
+        currentSteerAngle = Mathf.Lerp(
+            currentSteerAngle,
+            targetSteerAngle,
+            Time.fixedDeltaTime * blendSpeed);
+
+        // Block before race — allow creep for false start detection
+        if (!raceStarted)
+        {
+            foreach (var wheel in wheels)
+            {
+                if (wheel.motorized && gas > 0.01f)
+                    wheel.WheelCollider.motorTorque = gas * motorTorque * 0.3f;
+                else
+                    wheel.WheelCollider.motorTorque = 0f;
+
+                if (wheel.steerable)
+                    wheel.WheelCollider.steerAngle = currentSteerAngle;
+
+                wheel.WheelCollider.brakeTorque =
+                    gas > 0.01f ? 0f : brakeTorque * 0.5f;
+            }
+            return;
+        }
+
+        UpdateHeave();
+
+        if (gas > 0.1f)
+            SetPlatform("Surge", -gas * 3f);
+        else if (brake > 0.1f)
+            SetPlatform("Surge", brake * 5f);
+        else
+            SetPlatform("Surge", 0f);
 
         foreach (var wheel in wheels)
         {
             if (wheel.steerable)
-                wheel.WheelCollider.steerAngle = hInput * currentSteerRange;
+                wheel.WheelCollider.steerAngle = currentSteerAngle;
 
             if (currentGear == 0)
             {
@@ -402,6 +470,7 @@ public class CarControl : MonoBehaviour
             {
                 if (gas > 0.01f)
                 {
+                    rigidBody.linearDamping = 0f;
                     if (wheel.motorized)
                         wheel.WheelCollider.motorTorque =
                             -gas * motorTorque * 0.5f;
@@ -409,11 +478,13 @@ public class CarControl : MonoBehaviour
                 }
                 else if (brake > 0.01f)
                 {
+                    rigidBody.linearDamping = 0f;
                     wheel.WheelCollider.motorTorque = 0f;
                     wheel.WheelCollider.brakeTorque = brake * brakeTorque;
                 }
                 else
                 {
+                    rigidBody.linearDamping = 0.1f;
                     wheel.WheelCollider.motorTorque = 0f;
                     wheel.WheelCollider.brakeTorque = 0f;
                 }
@@ -422,6 +493,7 @@ public class CarControl : MonoBehaviour
             {
                 if (gas > 0.01f)
                 {
+                    rigidBody.linearDamping = 0f;
                     if (wheel.motorized)
                         wheel.WheelCollider.motorTorque =
                             GetGearTorque(gas, forwardSpeed);
@@ -429,37 +501,58 @@ public class CarControl : MonoBehaviour
                 }
                 else if (brake > 0.01f)
                 {
+                    rigidBody.linearDamping = 0f;
                     wheel.WheelCollider.motorTorque = 0f;
-                    wheel.WheelCollider.brakeTorque = brake * brakeTorque;
+
+                    float brakeScale = Mathf.Lerp(0.5f, 1f,
+                        Mathf.InverseLerp(200f, 0f, speedKMH));
+                    wheel.WheelCollider.brakeTorque =
+                        brake * brakeTorque * brakeScale;
                 }
                 else
                 {
+                    // Coasting — explicitly zero motor
                     wheel.WheelCollider.motorTorque = 0f;
-                    wheel.WheelCollider.brakeTorque = 0f;
+
+                    if (wheel.motorized)
+                    {
+                        float engineBrake = Mathf.Lerp(0f, 600f,
+                            Mathf.InverseLerp(0f, 200f, speedKMH));
+                        wheel.WheelCollider.brakeTorque = engineBrake;
+                    }
+                    else
+                    {
+                        wheel.WheelCollider.brakeTorque = 0f;
+                    }
+
+                    rigidBody.linearDamping = 0.1f;
                 }
             }
         }
     }
+
+    // =========================================================
+    // GEAR TORQUE
+    // =========================================================
+
     float GetGearTorque(float gas, float forwardSpeed)
     {
         if (currentGear == 0) return 0f;
-        if (currentGear == -1)
-            return -gas * motorTorque * 0.5f;
+        if (currentGear == -1) return -gas * motorTorque * 0.5f;
+        if (gas <= 0.01f) return 0f;
 
         float ratio = ratios[currentGear - 1];
         float gearTorque = motorTorque * ratio;
         float gearMaxSpeed = maxSpeed * ratio;
 
-        float gearSpeedFactor = Mathf.InverseLerp(
-            0, gearMaxSpeed, Mathf.Abs(forwardSpeed));
-
-        // Hard cap — if over this gear's max speed, 
-        // apply engine braking automatically
         if (Mathf.Abs(forwardSpeed) > gearMaxSpeed)
         {
             float overSpeed = Mathf.Abs(forwardSpeed) - gearMaxSpeed;
-            return -overSpeed * 500f; // engine braking force
+            return -overSpeed * 500f;
         }
+
+        float gearSpeedFactor = Mathf.InverseLerp(
+            0, gearMaxSpeed, Mathf.Abs(forwardSpeed));
 
         return gas * Mathf.Lerp(gearTorque, 0f, gearSpeedFactor);
     }
