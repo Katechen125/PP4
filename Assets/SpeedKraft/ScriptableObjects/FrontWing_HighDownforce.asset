@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 78c38d6e2328acf4e9f60842e2461eb8, type: 3}
+  m_Name: FrontWing_HighDownforce
+  m_EditorClassIdentifier: Assembly-CSharp::CarPart
+  partName: High Downforce Front Wing
+  description: Maximum front-end load. Generates aggressive downforce through slow
+    corners but bleeds speed on long straights. Built for tracks where cornering
+    grip wins races.
+  icon: {fileID: 0}
+  modelPrefab: {fileID: 0}
+  category: 0
+  downforce: 90
+  drag: 75
+  weight: 38
+  power: 0
+  reliability: 70

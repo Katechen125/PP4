@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 78c38d6e2328acf4e9f60842e2461eb8, type: 3}
+  m_Name: Tyres_Hard
+  m_EditorClassIdentifier: Assembly-CSharp::CarPart
+  partName: Hard Compound
+  description: Built for distance. Grip builds slowly, peaks late, and holds. Unreachable
+    on a flying lap but unbeatable in a stint.
+  icon: {fileID: 0}
+  modelPrefab: {fileID: 0}
+  category: 4
+  downforce: 10
+  drag: 5
+  weight: 20
+  power: 0
+  reliability: 90

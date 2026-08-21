@@ -19,6 +19,7 @@ public class GameManager : MonoBehaviour
     public Transform car;
     public Rigidbody carRigidbody;
     public CarControl carControl;
+    public BuildImporter buildImporter;
 
     [Header("Collision")]
     public float collisionFeedbackDuration = 0.5f;
@@ -36,6 +37,7 @@ public class GameManager : MonoBehaviour
     public GameObject endScreenPanel;
     public TextMeshProUGUI finalTimeText;
     public TextMeshProUGUI scoreText;
+    public TextMeshProUGUI predictionText;
     public StarDisplay starDisplay;
     public TextMeshProUGUI leaderboardText;
     public Button replayButton;
@@ -257,6 +259,8 @@ public class GameManager : MonoBehaviour
         if (starDisplay != null)
             starDisplay.SetStars(starFloat);
 
+        ShowPredictionComparison();
+
         StartCoroutine(AnimateScore(score));
 
         string lbText = "LEADERBOARD\n";
@@ -284,6 +288,51 @@ public class GameManager : MonoBehaviour
                 Debug.Log($"[GameManager] Top 3 finish at position {playerPosition + 1}, playing clip");
             }
         }
+    }
+
+    void ShowPredictionComparison()
+    {
+        if (predictionText == null) return;
+
+        var loaded = buildImporter != null ? buildImporter.LoadedBuild : null;
+        if (loaded == null)
+        {
+            predictionText.text = "";
+            return;
+        }
+
+        var lines = new System.Text.StringBuilder();
+        lines.AppendLine($"SPEEDKRAFT PREDICTION — {loaded.circuitName.ToUpper()} ({loaded.circuitRating})");
+
+        // Best lap vs SPEEDKRAFT's estimated qualifying lap
+        if (loaded.estimatedQualiLapSeconds > 0f && bestLapTime < Mathf.Infinity)
+        {
+            float lapDiff = bestLapTime - loaded.estimatedQualiLapSeconds;
+            string lapVerdict = Mathf.Abs(lapDiff) <= 2f
+                ? "SPOT ON"
+                : (lapDiff < 0f ? "BEAT THE PREDICTION" : "SLOWER THAN PREDICTED");
+
+            lines.AppendLine(
+                $"Predicted lap {FormatTime(loaded.estimatedQualiLapSeconds)}  |  " +
+                $"Actual best {FormatTime(bestLapTime)}  |  {lapVerdict} " +
+                $"({(lapDiff >= 0f ? "+" : "")}{lapDiff:0.0}s)");
+        }
+
+        // Total race time vs SPEEDKRAFT's projected race time
+        if (loaded.totalRaceTimeSeconds > 0f)
+        {
+            float raceDiff = raceTimer - loaded.totalRaceTimeSeconds;
+            string raceVerdict = Mathf.Abs(raceDiff) <= 3f
+                ? "MATCHED THE PROJECTION"
+                : (raceDiff < 0f ? "FASTER THAN PROJECTED" : "SLOWER THAN PROJECTED");
+
+            lines.AppendLine(
+                $"Projected race {FormatTime(loaded.totalRaceTimeSeconds)}  |  " +
+                $"Actual {FormatTime(raceTimer)}  |  {raceVerdict} " +
+                $"({(raceDiff >= 0f ? "+" : "")}{raceDiff:0.0}s)");
+        }
+
+        predictionText.text = lines.ToString();
     }
 
     void SaveBestScore(int score, float time)

@@ -1,0 +1,94 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+    <Style src="SplashStyles.uss"/>
+    <ui:VisualElement name="Root">
+
+        <ui:VisualElement name="TopAccent"/>
+        <ui:VisualElement name="TopAccentThin"/>
+        <ui:VisualElement name="BottomLine"/>
+        <ui:VisualElement name="AccentGlow"/>
+        <ui:VisualElement name="CarBg"/>
+        <ui:VisualElement name="DarkOverlay"/>
+        <ui:VisualElement name="ScanLines"/>
+
+        <ui:VisualElement name="CornerTL" class="corner"/>
+        <ui:VisualElement name="CornerTR" class="corner"/>
+        <ui:VisualElement name="CornerBL" class="corner"/>
+        <ui:VisualElement name="CornerBR" class="corner"/>
+
+        <ui:VisualElement name="HudTL">
+            <ui:Label name="HudTL1" text="APPLE VISION PRO"/>
+            <ui:Label name="HudTL2" text="SYS.READY · v2.5"/>
+        </ui:VisualElement>
+
+        <ui:VisualElement name="HudTR">
+            <ui:Label name="HudTR1" text="2025 SEASON"/>
+            <ui:Label name="HudTR2" text="CAR.CFG · READY"/>
+        </ui:VisualElement>
+
+        <ui:VisualElement name="Content">
+            <ui:VisualElement name="Badge">
+                <ui:VisualElement name="BadgeDot"/>
+                <ui:Label name="BadgeText" text="FORMULA 1 · CAR CONFIGURATOR"/>
+                <ui:VisualElement name="BadgeDot2"/>
+            </ui:VisualElement>
+
+            <ui:Label name="Presents" text="HSIUNG-SI TECHNOLOGIES PRESENTS"/>
+
+            <ui:Label name="TitleSpeed" text="SPEED"/>
+
+            <ui:VisualElement name="RuleWrap">
+                <ui:VisualElement name="RuleLine"/>
+                <ui:Label name="RuleText" text="FORMULA 1 CAR CONFIGURATOR"/>
+                <ui:VisualElement name="RuleLine2"/>
+            </ui:VisualElement>
+
+            <ui:Label name="TitleKraft" text="KRAFT"/>
+
+            <ui:Label name="Tagline" text="Every aero decision. Every component choice."/>
+            <ui:Label name="Tagline2" text="Configure your car. Race with your setup."/>
+
+            <ui:VisualElement name="BtnOuter">
+                <ui:Button name="BtnStart" text="ENTER GARAGE →"/>
+            </ui:VisualElement>
+
+            <ui:VisualElement name="StatsRow">
+                <ui:VisualElement class="stat-item">
+                    <ui:Label text="8" class="stat-num"/>
+                    <ui:Label text="CIRCUITS" class="stat-lbl"/>
+                </ui:VisualElement>
+                <ui:VisualElement class="stat-item">
+                    <ui:Label text="24" class="stat-num"/>
+                    <ui:Label text="PARTS" class="stat-lbl"/>
+                </ui:VisualElement>
+                <ui:VisualElement class="stat-item">
+                    <ui:Label text="8" class="stat-num"/>
+                    <ui:Label text="CATEGORIES" class="stat-lbl"/>
+                </ui:VisualElement>
+                <ui:VisualElement class="stat-item">
+                    <ui:Label text="4" class="stat-num"/>
+                    <ui:Label text="STEPS" class="stat-lbl"/>
+                </ui:VisualElement>
+            </ui:VisualElement>
+        </ui:VisualElement>
+
+        <ui:VisualElement name="BottomStrip">
+            <ui:VisualElement name="BottomSteps">
+                <ui:Label name="Step1" text="01 CIRCUIT" class="bottom-step bottom-step--active"/>
+                <ui:Label name="Step2" text="02 BUILD" class="bottom-step"/>
+                <ui:Label name="Step3" text="03 EVALUATE" class="bottom-step"/>
+                <ui:Label name="Step4" text="04 RACE" class="bottom-step"/>
+            </ui:VisualElement>
+            <ui:Label name="BottomRight" text="SPEEDKRAFT · 2025"/>
+        </ui:VisualElement>
+
+        <!-- Garage doors: 0 width until BtnStart is clicked, then grow to
+             50% each, meeting at center. DoorSeamGlow/DoorSeamCore start
+             invisible (opacity 0) and are only faded in by script the
+             instant the doors finish closing, that's the synced flash. -->
+        <ui:VisualElement name="GarageDoorLeft" class="garage-door garage-door--left"/>
+        <ui:VisualElement name="GarageDoorRight" class="garage-door garage-door--right"/>
+        <ui:VisualElement name="DoorSeamGlow"/>
+        <ui:VisualElement name="DoorSeamCore"/>
+
+    </ui:VisualElement>
+</ui:UXML>

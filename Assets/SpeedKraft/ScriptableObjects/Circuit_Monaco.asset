@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8bfb85a1c9f9bd445938c2c3a9e97f6f, type: 3}
+  m_Name: Circuit_Monaco
+  m_EditorClassIdentifier: Assembly-CSharp::Circuit
+  circuitName: Monaco
+  country: Monte Carlo
+  region: Europe
+  circuitType: Street Circuit
+  trackLayout: {fileID: 21300000, guid: e1eb9ee0a8802b74d9e97d93d134e484, type: 3}
+  lapLengthKm: 3.337
+  raceLaps: 78
+  topSpeedKmh: 260
+  flagSprite: {fileID: 21300000, guid: 60835f902d7f96f469cf4ce21b9f27ad, type: 3}
+  downforceRequirement: 95
+  dragSensitivity: 20
+  tyreStress: 40
+  brakeStress: 90
+  engineDemand: 30
+  tags:
+  - STREET
+  - MAX DOWNFORCE
+  lapRecordTime: ' 1:12.909'
+  lapRecordHolder: Lewis Hamilton

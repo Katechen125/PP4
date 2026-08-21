@@ -1,0 +1,76 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+    <Style src="CircuitStyles.uss"/>
+    <ui:VisualElement name="Root">
+
+        <ui:VisualElement name="Header">
+            <ui:VisualElement name="HeaderLeft">
+                <ui:Label name="AppTitle" text="SPEEDKRAFT"/>
+                <ui:Label name="AppSubtitle" text="BY HSIUNG-SI TECHNOLOGIES"/>
+            </ui:VisualElement>
+            <ui:Label name="HeaderRight" text="8 CIRCUITS AVAILABLE"/>
+        </ui:VisualElement>
+
+        <ui:VisualElement name="MainContent">
+
+            <ui:VisualElement name="GridPanel">
+                <ui:Label name="GridLabel" text="CHOOSE A CIRCUIT"/>
+                <ui:ScrollView name="CircuitGrid"
+                    vertical-scroller-visibility="Hidden"
+                    horizontal-scroller-visibility="Hidden"/>
+            </ui:VisualElement>
+
+            <ui:VisualElement name="PreviewPanel">
+                <ui:ScrollView name="PreviewScroll"
+                    vertical-scroller-visibility="Hidden"
+                    horizontal-scroller-visibility="Hidden">
+
+                    <ui:VisualElement name="TrackImageContainer">
+                        <ui:VisualElement name="TrackImage"/>
+
+                        <!-- Mission lock-in overlay, invisible until BtnConfirm
+                             triggers the coroutine in CircuitSelectionController -->
+                        <ui:VisualElement name="LockCornerTL" class="lock-corner lock-corner--tl"/>
+                        <ui:VisualElement name="LockCornerTR" class="lock-corner lock-corner--tr"/>
+                        <ui:VisualElement name="LockCornerBL" class="lock-corner lock-corner--bl"/>
+                        <ui:VisualElement name="LockCornerBR" class="lock-corner lock-corner--br"/>
+                        <ui:VisualElement name="LockFlash"/>
+                        <ui:VisualElement name="LockStampWrap">
+                            <ui:Label name="LockStamp" text="CIRCUIT LOCKED"/>
+                        </ui:VisualElement>
+                    </ui:VisualElement>
+
+                    <ui:VisualElement name="CircuitInfo">
+                        <ui:VisualElement name="CircuitNameRow">
+                            <ui:VisualElement name="CircuitFlagImg"/>
+                            <ui:VisualElement name="CircuitNameCol">
+                                <ui:Label name="CircuitName" text="SELECT A CIRCUIT"/>
+                                <ui:Label name="CircuitSub" text=""/>
+                            </ui:VisualElement>
+                        </ui:VisualElement>
+                        <ui:VisualElement name="TagsContainer"/>
+                        <ui:VisualElement name="StatsRow">
+                            <ui:VisualElement class="stat-block">
+                                <ui:Label text="LAP LENGTH" class="stat-lbl"/>
+                                <ui:Label name="LapLength" text="--" class="stat-val"/>
+                            </ui:VisualElement>
+                            <ui:VisualElement class="stat-block">
+                                <ui:Label text="RACE LAPS" class="stat-lbl"/>
+                                <ui:Label name="RaceLaps" text="--" class="stat-val"/>
+                            </ui:VisualElement>
+                            <ui:VisualElement class="stat-block">
+                                <ui:Label text="TOP SPEED" class="stat-lbl"/>
+                                <ui:Label name="TopSpeed" text="--" class="stat-val"/>
+                            </ui:VisualElement>
+                        </ui:VisualElement>
+                        <ui:VisualElement name="ButtonRow">
+                            <ui:Button name="BtnConfirm" text="BUILD FOR THIS CIRCUIT →"/>
+                        </ui:VisualElement>
+                    </ui:VisualElement>
+
+                </ui:ScrollView>
+                <ui:Label name="ScrollHint" text="↓  SCROLL FOR MORE"/>
+            </ui:VisualElement>
+
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

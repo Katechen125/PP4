@@ -1,0 +1,370 @@
+#Root {
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    background-color: rgb(13, 10, 7);
+}
+
+#Header {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 20px 10px 20px;
+    border-bottom-width: 1px;
+    border-bottom-color: rgb(40, 28, 16);
+    background-color: rgb(16, 12, 8);
+    flex-shrink: 0;
+}
+
+#HeaderLeft {
+    flex-direction: column;
+}
+
+#AppTitle {
+    color: rgb(255, 107, 26);
+    font-size: 10px;
+    -unity-font-style: bold;
+    letter-spacing: 2px;
+    margin-bottom: 1px;
+}
+
+#AppSubtitle {
+    color: rgb(70, 52, 30);
+    font-size: 8px;
+    letter-spacing: 1.5px;
+    margin-bottom: 4px;
+}
+
+#ScreenTitle {
+    color: rgb(255, 255, 255);
+    font-size: 18px;
+    -unity-font-style: bold;
+    letter-spacing: 1.5px;
+}
+
+#HeaderRight {
+    color: rgb(100, 75, 45);
+    font-size: 10px;
+    letter-spacing: 1.5px;
+}
+
+#MainContent {
+    flex-direction: row;
+    flex: 1;
+    overflow: hidden;
+}
+
+#GridPanel {
+    width: 200px;
+    background-color: rgb(16, 12, 8);
+    border-right-width: 1px;
+    border-right-color: rgb(40, 28, 16);
+    padding: 12px 8px;
+    flex-direction: column;
+    flex-shrink: 0;
+}
+
+#GridLabel {
+    font-size: 9px;
+    color: rgb(90, 68, 38);
+    letter-spacing: 1.5px;
+    margin-bottom: 8px;
+    padding: 0 4px;
+    flex-shrink: 0;
+}
+
+#CircuitGrid {
+    flex: 1;
+}
+
+.circuit-card {
+    flex-direction: row;
+    align-items: center;
+    background-color: rgb(20, 14, 8);
+    border-width: 1px;
+    border-color: rgb(35, 25, 14);
+    border-radius: 6px;
+    padding: 7px 10px;
+    margin-bottom: 4px;
+    transform-origin: center;
+    transition-property: scale, background-color, border-color;
+    transition-duration: 0.15s;
+    transition-timing-function: ease-out-cubic;
+}
+
+.circuit-card:hover {
+    background-color: rgb(28, 19, 10);
+    border-color: rgb(255, 107, 26);
+    scale: 1.025 1.025;
+}
+
+.circuit-card--selected {
+    background-color: rgb(30, 20, 10);
+    border-color: rgb(255, 107, 26);
+    border-left-width: 2px;
+    border-left-color: rgb(255, 107, 26);
+}
+
+.circuit-flag-img {
+    width: 28px;
+    height: 20px;
+    margin-right: 8px;
+    flex-shrink: 0;
+    -unity-background-scale-mode: stretch-to-fill;
+    border-radius: 2px;
+}
+
+.circuit-name-col {
+    flex: 1;
+}
+
+.circuit-card-name {
+    font-size: 12px;
+    color: rgb(200, 160, 100);
+    -unity-font-style: bold;
+    margin-bottom: 1px;
+}
+
+.circuit-card--selected .circuit-card-name {
+    color: rgb(255, 107, 26);
+}
+
+.circuit-card-type {
+    font-size: 9px;
+    color: rgb(80, 60, 32);
+    letter-spacing: 0.5px;
+}
+
+.circuit-card--selected .circuit-card-type {
+    color: rgb(150, 85, 30);
+}
+
+#PreviewPanel {
+    flex: 1;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+#PreviewScroll {
+    flex: 1;
+}
+
+#TrackImageContainer {
+    background-color: rgb(240, 230, 215);
+    align-items: center;
+    justify-content: center;
+    padding: 14px;
+    margin: 8px 8px 4px 8px;
+    border-radius: 8px;
+    height: 240px;
+    flex-shrink: 0;
+    overflow: hidden;
+    position: relative;
+}
+
+#TrackImage {
+    width: 100%;
+    height: 100%;
+    -unity-background-scale-mode: scale-to-fit;
+    transform-origin: center;
+}
+
+#CircuitInfo {
+    padding: 12px 18px 16px 18px;
+    background-color: rgb(14, 10, 6);
+    border-top-width: 1px;
+    border-top-color: rgb(40, 28, 16);
+    flex-shrink: 0;
+}
+
+#CircuitNameRow {
+    flex-direction: row;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+#CircuitFlagImg {
+    width: 38px;
+    height: 26px;
+    margin-right: 10px;
+    flex-shrink: 0;
+    -unity-background-scale-mode: stretch-to-fill;
+    border-radius: 3px;
+    border-width: 1px;
+    border-color: rgb(50, 36, 20);
+}
+
+#CircuitNameCol {
+    flex: 1;
+}
+
+#CircuitName {
+    font-size: 20px;
+    color: rgb(255, 255, 255);
+    -unity-font-style: bold;
+    letter-spacing: 1px;
+    margin-bottom: 1px;
+}
+
+#CircuitSub {
+    font-size: 10px;
+    color: rgb(90, 68, 38);
+    letter-spacing: 1.5px;
+}
+
+#TagsContainer {
+    flex-direction: row;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+    margin-top: 6px;
+}
+
+.circuit-tag {
+    background-color: rgba(255, 107, 26, 0.12);
+    border-width: 1px;
+    border-color: rgba(255, 107, 26, 0.3);
+    border-radius: 2px;
+    padding: 2px 7px;
+    font-size: 9px;
+    color: rgb(255, 140, 60);
+    letter-spacing: 1.5px;
+    margin-right: 4px;
+    margin-bottom: 3px;
+}
+
+#StatsRow {
+    flex-direction: row;
+    margin-bottom: 12px;
+}
+
+.stat-block {
+    margin-right: 22px;
+}
+
+.stat-lbl {
+    font-size: 9px;
+    color: rgb(80, 60, 32);
+    letter-spacing: 1.5px;
+    margin-bottom: 2px;
+}
+
+.stat-val {
+    font-size: 14px;
+    color: rgb(220, 185, 130);
+    -unity-font-style: bold;
+    letter-spacing: 0.5px;
+}
+
+#ButtonRow {
+    flex-direction: row;
+}
+
+#BtnConfirm {
+    background-color: rgb(255, 107, 26);
+    border-width: 0;
+    border-radius: 3px;
+    color: rgb(255, 255, 255);
+    font-size: 11px;
+    -unity-font-style: bold;
+    letter-spacing: 2px;
+    height: 40px;
+    padding: 0 28px;
+    flex-shrink: 0;
+}
+
+#BtnConfirm:hover {
+    background-color: rgb(255, 130, 55);
+}
+
+#ScrollHint {
+    font-size: 9px;
+    color: rgb(90, 68, 38);
+    letter-spacing: 2px;
+    -unity-text-align: upper-center;
+    padding: 5px 0;
+    background-color: rgb(14, 10, 6);
+    border-top-width: 1px;
+    border-top-color: rgb(35, 25, 14);
+    flex-shrink: 0;
+}
+
+/* ===================== MISSION LOCK-IN SEQUENCE ===================== */
+/* Corner brackets snap onto the track image, a stamp punches in, and a
+   quick flash sells the "target locked" moment before switching to the
+   builder. All start invisible and are only driven by script in
+   LockInSequence(). */
+.lock-corner {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    opacity: 0;
+}
+
+.lock-corner--tl {
+    top: 6px;
+    left: 6px;
+    border-top-width: 3px;
+    border-left-width: 3px;
+    border-top-color: rgb(255, 107, 26);
+    border-left-color: rgb(255, 107, 26);
+}
+
+.lock-corner--tr {
+    top: 6px;
+    right: 6px;
+    border-top-width: 3px;
+    border-right-width: 3px;
+    border-top-color: rgb(255, 107, 26);
+    border-right-color: rgb(255, 107, 26);
+}
+
+.lock-corner--bl {
+    bottom: 6px;
+    left: 6px;
+    border-bottom-width: 3px;
+    border-left-width: 3px;
+    border-bottom-color: rgb(255, 107, 26);
+    border-left-color: rgb(255, 107, 26);
+}
+
+.lock-corner--br {
+    bottom: 6px;
+    right: 6px;
+    border-bottom-width: 3px;
+    border-right-width: 3px;
+    border-bottom-color: rgb(255, 107, 26);
+    border-right-color: rgb(255, 107, 26);
+}
+
+#LockStampWrap {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transform-origin: center;
+}
+
+#LockStamp {
+    font-size: 24px;
+    color: rgb(255, 255, 255);
+    -unity-font-style: bold;
+    letter-spacing: 4px;
+    background-color: rgba(255, 107, 26, 0.92);
+    padding: 10px 26px;
+    border-radius: 4px;
+    -unity-text-align: middle-center;
+}
+
+#LockFlash {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(255, 190, 120, 0.7);
+    opacity: 0;
+}

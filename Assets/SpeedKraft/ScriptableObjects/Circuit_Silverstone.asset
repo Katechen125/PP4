@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8bfb85a1c9f9bd445938c2c3a9e97f6f, type: 3}
+  m_Name: Circuit_Silverstone
+  m_EditorClassIdentifier: Assembly-CSharp::Circuit
+  circuitName: Silverstone
+  country: United Kingdom
+  region: Europe
+  circuitType: High Speed
+  trackLayout: {fileID: 21300000, guid: b84c2d79779c1c94e9b5fe546317e4f0, type: 3}
+  lapLengthKm: 5.891
+  raceLaps: 52
+  topSpeedKmh: 300
+  flagSprite: {fileID: 21300000, guid: e33d2e5efd8beb7419ecfdf109a2d130, type: 3}
+  downforceRequirement: 65
+  dragSensitivity: 55
+  tyreStress: 75
+  brakeStress: 60
+  engineDemand: 70
+  tags:
+  - BALANCED
+  - FAST CORNERS
+  lapRecordTime: 1:27.097
+  lapRecordHolder: Max Verstappen

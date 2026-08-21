@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 78c38d6e2328acf4e9f60842e2461eb8, type: 3}
+  m_Name: RearWing_LowDrag
+  m_EditorClassIdentifier: Assembly-CSharp::CarPart
+  partName: Low Drag Rear Wing
+  description: DRS-optimised thin profile. Rear stability suffers but straight-line
+    speed is brutal. One wrong move and the back steps out.
+  icon: {fileID: 0}
+  modelPrefab: {fileID: 0}
+  category: 1
+  downforce: 50
+  drag: 22
+  weight: 36
+  power: 0
+  reliability: 85

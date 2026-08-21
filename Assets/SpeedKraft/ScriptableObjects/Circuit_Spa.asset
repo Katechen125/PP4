@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8bfb85a1c9f9bd445938c2c3a9e97f6f, type: 3}
+  m_Name: Circuit_Spa
+  m_EditorClassIdentifier: Assembly-CSharp::Circuit
+  circuitName: Spa
+  country: Belgium
+  region: Europe
+  circuitType: Mixed
+  trackLayout: {fileID: 21300000, guid: 895b755e8e6fb9a4d98f1190418dbf62, type: 3}
+  lapLengthKm: 7.004
+  raceLaps: 44
+  topSpeedKmh: 330
+  flagSprite: {fileID: 21300000, guid: 07d18e802e70f14459575af7468f71af, type: 3}
+  downforceRequirement: 55
+  dragSensitivity: 60
+  tyreStress: 60
+  brakeStress: 65
+  engineDemand: 80
+  tags:
+  - MIXED
+  - WEATHER
+  - ALL ROUND
+  lapRecordTime: ' 1:46.286'
+  lapRecordHolder: Valtteri Bottas

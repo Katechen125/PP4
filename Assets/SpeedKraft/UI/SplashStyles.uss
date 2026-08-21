@@ -1,0 +1,399 @@
+#Root {
+    width: 100%;
+    height: 100%;
+    background-color: rgb(6, 4, 2);
+    position: relative;
+}
+
+#CarBg {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    -unity-background-scale-mode: scale-and-crop;
+}
+
+#DarkOverlay {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(5, 3, 1, 0.88);
+}
+
+#AccentGlow {
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 50%;
+    height: 60%;
+    background-color: rgba(255, 107, 26, 0.06);
+}
+
+#ScanLines {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+}
+
+#TopAccent {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    height: 4px;
+    background-color: rgb(255, 107, 26);
+}
+
+#TopAccentThin {
+    position: absolute;
+    left: 0;
+    top: 6px;
+    right: 0;
+    height: 1px;
+    background-color: rgba(255, 107, 26, 0.2);
+}
+
+#BottomLine {
+    position: absolute;
+    left: 0;
+    bottom: 34px;
+    right: 0;
+    height: 1px;
+    background-color: rgba(255, 107, 26, 0.15);
+}
+
+.corner {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+}
+
+#CornerTL {
+    top: 10px;
+    left: 10px;
+    border-top-width: 1px;
+    border-left-width: 1px;
+    border-top-color: rgba(255, 107, 26, 0.55);
+    border-left-color: rgba(255, 107, 26, 0.55);
+    border-right-width: 0;
+    border-bottom-width: 0;
+}
+
+#CornerTR {
+    top: 10px;
+    right: 10px;
+    border-top-width: 1px;
+    border-right-width: 1px;
+    border-top-color: rgba(255, 107, 26, 0.55);
+    border-right-color: rgba(255, 107, 26, 0.55);
+    border-left-width: 0;
+    border-bottom-width: 0;
+}
+
+#CornerBL {
+    bottom: 44px;
+    left: 10px;
+    border-bottom-width: 1px;
+    border-left-width: 1px;
+    border-bottom-color: rgba(255, 107, 26, 0.55);
+    border-left-color: rgba(255, 107, 26, 0.55);
+    border-top-width: 0;
+    border-right-width: 0;
+}
+
+#CornerBR {
+    bottom: 44px;
+    right: 10px;
+    border-bottom-width: 1px;
+    border-right-width: 1px;
+    border-bottom-color: rgba(255, 107, 26, 0.55);
+    border-right-color: rgba(255, 107, 26, 0.55);
+    border-top-width: 0;
+    border-left-width: 0;
+}
+
+#HudTL {
+    position: absolute;
+    top: 14px;
+    left: 18px;
+}
+
+#HudTL Label {
+    font-size: 7px;
+    color: rgba(255, 107, 26, 0.55);
+    letter-spacing: 2px;
+}
+
+#HudTR {
+    position: absolute;
+    top: 14px;
+    right: 18px;
+    align-items: flex-end;
+}
+
+#HudTR Label {
+    font-size: 7px;
+    color: rgba(255, 107, 26, 0.55);
+    letter-spacing: 2px;
+}
+
+#Content {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 34px;
+    align-items: center;
+    justify-content: flex-end;
+    padding-left: 24px;
+    padding-right: 24px;
+    padding-bottom: 16px;
+}
+
+#Badge {
+    flex-direction: row;
+    align-items: center;
+    background-color: rgba(255, 107, 26, 0.1);
+    border-width: 1px;
+    border-color: rgba(255, 107, 26, 0.25);
+    border-radius: 2px;
+    padding: 5px 14px;
+    margin-bottom: 16px;
+}
+
+#BadgeDot {
+    width: 4px;
+    height: 4px;
+    border-radius: 2px;
+    background-color: rgb(255, 107, 26);
+    margin-right: 7px;
+}
+
+#BadgeDot2 {
+    width: 4px;
+    height: 4px;
+    border-radius: 2px;
+    background-color: rgb(255, 107, 26);
+    margin-left: 7px;
+}
+
+#BadgeText {
+    font-size: 8px;
+    color: rgb(255, 107, 26);
+    letter-spacing: 3px;
+    -unity-font-style: bold;
+}
+
+#Presents {
+    font-size: 8px;
+    color: rgba(255, 255, 255, 0.45);
+    letter-spacing: 4px;
+    margin-bottom: 14px;
+    -unity-text-align: upper-center;
+}
+
+#TitleSpeed {
+    font-size: 72px;
+    color: rgb(255, 255, 255);
+    -unity-font-style: bold;
+    letter-spacing: -2px;
+    -unity-text-align: upper-center;
+    margin-bottom: 0px;
+}
+
+#RuleWrap {
+    flex-direction: row;
+    align-items: center;
+    margin-top: 6px;
+    margin-bottom: 6px;
+    align-self: stretch;
+}
+
+#RuleLine {
+    flex: 1;
+    height: 2px;
+    background-color: rgb(255, 107, 26);
+}
+
+#RuleLine2 {
+    flex: 1;
+    height: 2px;
+    background-color: rgb(255, 107, 26);
+}
+
+#RuleText {
+    font-size: 7px;
+    color: rgba(255, 107, 26, 0.7);
+    letter-spacing: 3px;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+#TitleKraft {
+    font-size: 72px;
+    color: rgb(255, 107, 26);
+    -unity-font-style: bold;
+    letter-spacing: -2px;
+    -unity-text-align: upper-center;
+    margin-bottom: 10px;
+}
+
+#Tagline {
+    font-size: 12px;
+    color: rgb(220, 170, 100);
+    letter-spacing: 1.5px;
+    -unity-text-align: upper-center;
+    margin-bottom: 4px;
+}
+
+#Tagline2 {
+    font-size: 10px;
+    color: rgba(180, 130, 65, 0.85);
+    letter-spacing: 1px;
+    -unity-text-align: upper-center;
+    margin-bottom: 20px;
+}
+
+#BtnOuter {
+    padding: 3px;
+    border-width: 1px;
+    border-color: rgba(255, 107, 26, 0.3);
+    border-radius: 6px;
+    margin-bottom: 18px;
+}
+
+#BtnStart {
+    background-color: rgb(255, 107, 26);
+    border-width: 0;
+    border-radius: 4px;
+    color: rgb(255, 255, 255);
+    font-size: 12px;
+    -unity-font-style: bold;
+    letter-spacing: 3px;
+    padding: 14px 60px;
+    height: 48px;
+}
+
+#BtnStart:hover {
+    background-color: rgb(255, 140, 55);
+}
+
+#StatsRow {
+    flex-direction: row;
+    border-width: 1px;
+    border-color: rgba(255, 107, 26, 0.12);
+    border-radius: 3px;
+    overflow: hidden;
+    align-self: stretch;
+}
+
+.stat-item {
+    flex: 1;
+    padding: 8px;
+    border-right-width: 1px;
+    border-right-color: rgba(255, 107, 26, 0.08);
+    align-items: center;
+}
+
+.stat-num {
+    font-size: 20px;
+    color: rgb(255, 107, 26);
+    -unity-font-style: bold;
+    -unity-text-align: upper-center;
+}
+
+.stat-lbl {
+    font-size: 7px;
+    color: rgba(180, 130, 60, 0.9);
+    letter-spacing: 1.5px;
+    -unity-text-align: upper-center;
+    margin-top: 2px;
+}
+
+#BottomStrip {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    height: 34px;
+    background-color: rgba(3, 2, 1, 0.98);
+    border-top-width: 1px;
+    border-top-color: rgba(255, 107, 26, 0.08);
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 18px;
+}
+
+#BottomSteps {
+    flex-direction: row;
+}
+
+.bottom-step {
+    font-size: 7px;
+    color: rgba(180, 120, 50, 0.7);
+    letter-spacing: 1.5px;
+    padding: 0 12px;
+    border-right-width: 1px;
+    border-right-color: rgba(255, 107, 26, 0.07);
+}
+
+.bottom-step--active {
+    color: rgb(255, 107, 26);
+}
+
+#BottomRight {
+    font-size: 7px;
+    color: rgba(180, 120, 50, 0.6);
+    letter-spacing: 2px;
+}
+
+/* ===================== GARAGE DOOR TRANSITION ===================== */
+/* Doors start at 0 width and grow to 50% each, meeting in the center.
+   No border on the door panels themselves, that was causing a static
+   orange line to appear instantly at frame 0, before the doors had
+   visibly moved, it read as "the light already happened." The seam
+   flash below is triggered by script only once the doors are fully
+   closed, so the glow is synced to the actual moment of closure. */
+.garage-door {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 0%;
+    background-color: rgb(6, 4, 2);
+}
+
+.garage-door--left {
+    left: 0;
+}
+
+.garage-door--right {
+    right: 0;
+}
+
+#DoorSeamGlow {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    width: 80px;
+    margin-left: -40px;
+    background-color: rgba(255, 140, 40, 0.35);
+    opacity: 0;
+}
+
+#DoorSeamCore {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    width: 4px;
+    margin-left: -2px;
+    background-color: rgb(255, 220, 180);
+    opacity: 0;
+}

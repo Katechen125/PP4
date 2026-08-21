@@ -1,0 +1,348 @@
+#Root {
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    background-color: rgb(13, 10, 7);
+}
+
+#Header {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 16px 10px 16px;
+    border-bottom-width: 1px;
+    border-bottom-color: rgb(40, 28, 16);
+    background-color: rgb(16, 12, 8);
+    flex-shrink: 0;
+}
+
+#HeaderLeft {
+    flex-direction: column;
+}
+
+#HeaderSub {
+    font-size: 7px;
+    color: rgb(60, 45, 28);
+    letter-spacing: 2px;
+    margin-bottom: 2px;
+}
+
+#HeaderTitle {
+    font-size: 16px;
+    color: rgb(255, 255, 255);
+    -unity-font-style: bold;
+    letter-spacing: 2px;
+}
+
+#HeaderRight {
+    flex-direction: row;
+    align-items: center;
+}
+
+#HeaderCircuitInfo {
+    margin-right: 10px;
+    align-items: flex-end;
+}
+
+#HeaderCircuitLabel {
+    font-size: 7px;
+    color: rgb(60, 45, 28);
+    letter-spacing: 1.5px;
+    margin-bottom: 2px;
+}
+
+#HeaderCircuitName {
+    font-size: 12px;
+    color: rgb(255, 107, 26);
+    -unity-font-style: bold;
+    letter-spacing: 1px;
+}
+
+#HeaderFlag {
+    width: 36px;
+    height: 24px;
+    -unity-background-scale-mode: stretch-to-fill;
+    border-radius: 3px;
+    border-width: 1px;
+    border-color: rgb(50, 36, 20);
+}
+
+#ResultsScroll {
+    flex: 1;
+    padding: 14px 16px;
+}
+
+/* Top row */
+#TopRow {
+    flex-direction: row;
+    margin-bottom: 14px;
+}
+
+#ScoreCard {
+    width: 110px;
+    background-color: rgb(255, 107, 26);
+    border-radius: 8px;
+    padding: 12px 10px;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-right: 10px;
+}
+
+#ScoreLabel {
+    font-size: 7px;
+    color: rgba(255, 255, 255, 0.7);
+    letter-spacing: 2px;
+    margin-bottom: 2px;
+}
+
+#ScoreNumber {
+    font-size: 38px;
+    color: rgb(255, 255, 255);
+    -unity-font-style: bold;
+    letter-spacing: -2px;
+    line-height: 1px;
+    margin-bottom: 2px;
+}
+
+#ScoreDenom {
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+#RightTop {
+    flex: 1;
+    flex-direction: column;
+}
+
+#RatingBox {
+    background-color: rgb(26, 18, 10);
+    border-width: 1px;
+    border-color: rgba(255, 107, 26, 0.3);
+    border-radius: 5px;
+    padding: 7px 10px;
+    margin-bottom: 6px;
+}
+
+#RatingLabel {
+    font-size: 7px;
+    color: rgb(60, 45, 28);
+    letter-spacing: 1.5px;
+    margin-bottom: 2px;
+}
+
+#RatingValue {
+    font-size: 12px;
+    color: rgb(255, 107, 26);
+    -unity-font-style: bold;
+    letter-spacing: 1px;
+}
+
+#MiniRow {
+    flex-direction: row;
+}
+
+.mini-stat {
+    flex: 1;
+    background-color: rgb(22, 14, 8);
+    border-width: 1px;
+    border-color: rgb(40, 28, 16);
+    border-radius: 4px;
+    padding: 6px 7px;
+    margin-right: 5px;
+}
+
+.ms-label {
+    font-size: 7px;
+    color: rgb(60, 45, 28);
+    letter-spacing: 1px;
+    margin-bottom: 2px;
+}
+
+.ms-val {
+    font-size: 12px;
+    color: rgb(255, 255, 255);
+    -unity-font-style: bold;
+}
+
+/* Section titles */
+.section-title {
+    font-size: 7px;
+    color: rgb(60, 45, 28);
+    letter-spacing: 2px;
+    margin-bottom: 6px;
+    margin-top: 4px;
+}
+
+/* Telemetry grid */
+#TeleGrid {
+    flex-direction: row;
+    flex-wrap: wrap;
+    margin-bottom: 14px;
+}
+
+.tele-cell {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    background-color: rgb(22, 14, 8);
+    border-width: 1px;
+    border-color: rgb(40, 28, 16);
+    border-radius: 4px;
+    padding: 7px 9px;
+    margin-right: 5px;
+    margin-bottom: 5px;
+    width: 30%;
+}
+
+.tc-label {
+    font-size: 8px;
+    color: rgb(90, 65, 38);
+}
+
+.tc-val {
+    font-size: 11px;
+    color: rgb(255, 255, 255);
+    -unity-font-style: bold;
+}
+
+.tc-val--good {
+    color: rgb(74, 222, 128);
+}
+
+.tc-val--warn {
+    color: rgb(255, 140, 60);
+}
+
+/* Performance bars */
+#BarsContainer {
+    margin-bottom: 14px;
+}
+
+.bar-row {
+    flex-direction: row;
+    align-items: center;
+    margin-bottom: 6px;
+}
+
+.bar-label {
+    font-size: 8px;
+    color: rgb(90, 65, 38);
+    width: 70px;
+    flex-shrink: 0;
+}
+
+.bar-track {
+    flex: 1;
+    height: 4px;
+    background-color: rgb(42, 26, 10);
+    border-radius: 2px;
+}
+
+.bar-fill {
+    height: 4px;
+    background-color: rgb(255, 107, 26);
+    border-radius: 2px;
+    width: 0%;
+}
+
+.bar-fill--good {
+    background-color: rgb(74, 222, 128);
+}
+
+.bar-fill--warn {
+    background-color: rgb(255, 140, 60);
+}
+
+.bar-val {
+    font-size: 9px;
+    color: rgb(170, 112, 60);
+    -unity-font-style: bold;
+    width: 24px;
+    -unity-text-align: upper-right;
+}
+
+/* Debrief */
+#Debrief {
+    background-color: rgb(22, 14, 8);
+    border-width: 1px;
+    border-color: rgb(40, 28, 16);
+    border-left-width: 2px;
+    border-left-color: rgb(255, 107, 26);
+    border-radius: 4px;
+    padding: 10px 12px;
+    margin-bottom: 14px;
+}
+
+#DebriefTitle {
+    font-size: 7px;
+    color: rgb(255, 107, 26);
+    letter-spacing: 2px;
+    margin-bottom: 8px;
+}
+
+#DebriefItems {
+    flex-direction: column;
+}
+
+.debrief-item {
+    flex-direction: row;
+    align-items: flex-start;
+    margin-bottom: 5px;
+}
+
+.debrief-dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 3px;
+    background-color: rgb(255, 107, 26);
+    flex-shrink: 0;
+    margin-top: 3px;
+    margin-right: 8px;
+}
+
+.debrief-text {
+    font-size: 9px;
+    color: rgb(138, 96, 64);
+    white-space: normal;
+    flex: 1;
+}
+
+/* Buttons */
+#ButtonRow {
+    flex-direction: row;
+}
+
+#BtnNewCircuit {
+    flex: 2;
+    background-color: rgb(255, 107, 26);
+    border-width: 0;
+    border-radius: 4px;
+    color: rgb(255, 255, 255);
+    font-size: 9px;
+    -unity-font-style: bold;
+    letter-spacing: 1.5px;
+    height: 38px;
+    margin-right: 6px;
+}
+
+#BtnNewCircuit:hover {
+    background-color: rgb(255, 130, 55);
+}
+
+#BtnRebuild {
+    flex: 1;
+    background-color: rgba(0, 0, 0, 0);
+    border-width: 1px;
+    border-color: rgb(58, 36, 16);
+    border-radius: 4px;
+    color: rgb(106, 64, 32);
+    font-size: 9px;
+    letter-spacing: 1.5px;
+    height: 38px;
+}
+
+#BtnRebuild:hover {
+    border-color: rgb(106, 64, 32);
+    color: rgb(170, 112, 60);
+}

@@ -1,0 +1,349 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+    <Style src="BuilderStyles.uss"/>
+    <ui:VisualElement name="Root">
+
+        <!-- LEFT PANEL -->
+        <ui:VisualElement name="CategoryPanel">
+           <ui:Label name="AppTitle" text="SPEEDKRAFT"/>
+            <ui:Label name="AppSubtitle" text="BY HSIUNG-SI TECHNOLOGIES"/>
+            <ui:VisualElement name="SidebarDivider"/>
+            <ui:VisualElement name="ProgressSection">
+                <ui:VisualElement name="ProgressHeader">
+                    <ui:Label name="ProgressLabel" text="BUILD PROGRESS"/>
+                    <ui:Label name="ProgressCount" text="0/8"/>
+                </ui:VisualElement>
+                <ui:VisualElement name="ProgressTrack">
+                    <ui:VisualElement name="ProgressFill"/>
+                </ui:VisualElement>
+            </ui:VisualElement>
+            <ui:VisualElement name="SidebarDivider2"/>
+            <ui:ScrollView name="CategoryScroll"
+                vertical-scroller-visibility="Hidden"
+                horizontal-scroller-visibility="Hidden">
+                <ui:Button name="BtnFrontWing" class="cat-btn">
+                    <ui:VisualElement class="btn-inner">
+                        <ui:VisualElement class="btn-left">
+                            <ui:Label class="btn-tag" text="FW"/>
+                            <ui:Label class="btn-lbl" text="Front Wing"/>
+                        </ui:VisualElement>
+                        <ui:Label name="StatusFrontWing" class="btn-status" text="——"/>
+                    </ui:VisualElement>
+                </ui:Button>
+                <ui:Button name="BtnRearWing" class="cat-btn">
+                    <ui:VisualElement class="btn-inner">
+                        <ui:VisualElement class="btn-left">
+                            <ui:Label class="btn-tag" text="RW"/>
+                            <ui:Label class="btn-lbl" text="Rear Wing"/>
+                        </ui:VisualElement>
+                        <ui:Label name="StatusRearWing" class="btn-status" text="——"/>
+                    </ui:VisualElement>
+                </ui:Button>
+                <ui:Button name="BtnEngine" class="cat-btn">
+                    <ui:VisualElement class="btn-inner">
+                        <ui:VisualElement class="btn-left">
+                            <ui:Label class="btn-tag" text="PU"/>
+                            <ui:Label class="btn-lbl" text="Power Unit"/>
+                        </ui:VisualElement>
+                        <ui:Label name="StatusEngine" class="btn-status" text="——"/>
+                    </ui:VisualElement>
+                </ui:Button>
+                <ui:Button name="BtnSuspension" class="cat-btn">
+                    <ui:VisualElement class="btn-inner">
+                        <ui:VisualElement class="btn-left">
+                            <ui:Label class="btn-tag" text="SUS"/>
+                            <ui:Label class="btn-lbl" text="Suspension"/>
+                        </ui:VisualElement>
+                        <ui:Label name="StatusSuspension" class="btn-status" text="——"/>
+                    </ui:VisualElement>
+                </ui:Button>
+                <ui:Button name="BtnTyres" class="cat-btn">
+                    <ui:VisualElement class="btn-inner">
+                        <ui:VisualElement class="btn-left">
+                            <ui:Label class="btn-tag" text="TYR"/>
+                            <ui:Label class="btn-lbl" text="Tyres"/>
+                        </ui:VisualElement>
+                        <ui:Label name="StatusTyres" class="btn-status" text="——"/>
+                    </ui:VisualElement>
+                </ui:Button>
+                <ui:Button name="BtnBrakes" class="cat-btn">
+                    <ui:VisualElement class="btn-inner">
+                        <ui:VisualElement class="btn-left">
+                            <ui:Label class="btn-tag" text="BRK"/>
+                            <ui:Label class="btn-lbl" text="Brakes"/>
+                        </ui:VisualElement>
+                        <ui:Label name="StatusBrakes" class="btn-status" text="——"/>
+                    </ui:VisualElement>
+                </ui:Button>
+                <ui:Button name="BtnSidepods" class="cat-btn">
+                    <ui:VisualElement class="btn-inner">
+                        <ui:VisualElement class="btn-left">
+                            <ui:Label class="btn-tag" text="SDP"/>
+                            <ui:Label class="btn-lbl" text="Sidepods"/>
+                        </ui:VisualElement>
+                        <ui:Label name="StatusSidepods" class="btn-status" text="——"/>
+                    </ui:VisualElement>
+                </ui:Button>
+                <ui:Button name="BtnFloor" class="cat-btn">
+                    <ui:VisualElement class="btn-inner">
+                        <ui:VisualElement class="btn-left">
+                            <ui:Label class="btn-tag" text="FLR"/>
+                            <ui:Label class="btn-lbl" text="Floor"/>
+                        </ui:VisualElement>
+                        <ui:Label name="StatusFloor" class="btn-status" text="——"/>
+                    </ui:VisualElement>
+                </ui:Button>
+            </ui:ScrollView>
+        </ui:VisualElement>
+
+        <!-- MIDDLE PANEL -->
+        <ui:VisualElement name="MiddlePanel">
+            <ui:VisualElement name="CircuitBanner">
+                <ui:VisualElement name="CircuitBannerFlag"/>
+                <ui:VisualElement name="CircuitBannerText">
+                    <ui:Label name="CircuitBannerLabel" text="BUILDING FOR"/>
+                    <ui:Label name="CircuitBannerName" text="——"/>
+                    <ui:VisualElement name="CircuitBannerTags"/>
+                </ui:VisualElement>
+            </ui:VisualElement>
+            <ui:VisualElement name="IntroBox">
+                <ui:Label name="IntroTitle" text="BUILD YOUR F1 CAR"/>
+                <ui:Label name="IntroSubtitle" text="CAR CONFIGURATOR · 8 COMPONENTS"/>
+                <ui:Label name="IntroDesc" text="Select a category from the left to begin. Each component affects downforce, drag, top speed, cornering grip, and reliability. Build smart. Race faster."/>
+            </ui:VisualElement>
+            <ui:Label name="CategoryLabel" text="FRONT WING"/>
+            <ui:Label name="CategoryCount" text="3 OPTIONS AVAILABLE"/>
+            <ui:ScrollView name="PartList"
+                vertical-scroller-visibility="Hidden"
+                horizontal-scroller-visibility="Hidden"/>
+        </ui:VisualElement>
+
+        <!-- RIGHT PANEL -->
+        <ui:VisualElement name="BuildPanel">
+            <ui:Label name="BuildTitle" text="YOUR BUILD"/>
+            <ui:Label name="BuildSubtitle" text="8 COMPONENTS REQUIRED"/>
+
+            <ui:VisualElement name="LiveMatchPanel" class="live-match-panel">
+                <ui:Label text="CIRCUIT FIT" class="live-match-heading" />
+
+                <ui:VisualElement class="live-match-row">
+                    <ui:VisualElement class="live-match-row-top">
+                        <ui:Label text="DOWNFORCE" class="live-match-label" />
+                        <ui:Label name="LiveMatchDownforceVal" text="--" class="live-match-val" />
+                    </ui:VisualElement>
+                    <ui:VisualElement class="live-match-track">
+                        <ui:VisualElement name="LiveMatchDownforceFill" class="live-match-fill" />
+                    </ui:VisualElement>
+                </ui:VisualElement>
+
+                <ui:VisualElement class="live-match-row">
+                    <ui:VisualElement class="live-match-row-top">
+                        <ui:Label text="DRAG" class="live-match-label" />
+                        <ui:Label name="LiveMatchDragVal" text="--" class="live-match-val" />
+                    </ui:VisualElement>
+                    <ui:VisualElement class="live-match-track">
+                        <ui:VisualElement name="LiveMatchDragFill" class="live-match-fill" />
+                    </ui:VisualElement>
+                </ui:VisualElement>
+
+                <ui:VisualElement class="live-match-row">
+                    <ui:VisualElement class="live-match-row-top">
+                        <ui:Label text="ENGINE" class="live-match-label" />
+                        <ui:Label name="LiveMatchEngineVal" text="--" class="live-match-val" />
+                    </ui:VisualElement>
+                    <ui:VisualElement class="live-match-track">
+                        <ui:VisualElement name="LiveMatchEngineFill" class="live-match-fill" />
+                    </ui:VisualElement>
+                </ui:VisualElement>
+
+                <ui:VisualElement class="live-match-row">
+                    <ui:VisualElement class="live-match-row-top">
+                        <ui:Label text="TYRE WEAR" class="live-match-label" />
+                        <ui:Label name="LiveMatchTyreVal" text="--" class="live-match-val" />
+                    </ui:VisualElement>
+                    <ui:VisualElement class="live-match-track">
+                        <ui:VisualElement name="LiveMatchTyreFill" class="live-match-fill" />
+                    </ui:VisualElement>
+                </ui:VisualElement>
+
+                <ui:Label name="LiveMatchHint" text="Select parts to see your fit" class="live-match-hint" />
+            </ui:VisualElement>
+
+            <ui:Button name="BtnEvaluate" text="EVALUATE BUILD"/>
+        </ui:VisualElement>
+
+        <!-- SUSPENSE REVEAL SCREEN: shown after Evaluate, before the results modal -->
+        <ui:VisualElement name="EvaluatingOverlay" style="display: none;">
+            <ui:VisualElement name="EvaluatingCard">
+                <ui:VisualElement name="EvaluatingPulse"/>
+                <ui:Label name="EvaluatingText" text="ANALYZING BUILD..."/>
+            </ui:VisualElement>
+        </ui:VisualElement>
+
+        <!-- RESULTS MODAL -->
+        <ui:VisualElement name="ResultsModal" style="display: none;">
+            <ui:VisualElement name="ModalOverlay"/>
+            <ui:VisualElement name="ModalCard">
+
+            <ui:VisualElement name="ModalHeader">
+            <ui:VisualElement name="ModalHeaderLeft">
+                <ui:Label name="ModalSub" text="POST-BUILD ANALYSIS"/>
+                <ui:Label name="ModalTitle" text="RACE REPORT"/>
+            </ui:VisualElement>
+            <ui:VisualElement name="ModalHeaderRight">
+                <ui:Label name="ModalCircuitName" text="——"/>
+                <ui:VisualElement name="ModalFlag"/>
+                <ui:Button name="BtnModalX" text="✕"/>
+            </ui:VisualElement>
+        </ui:VisualElement>
+
+        <!-- Tab buttons -->
+        <ui:VisualElement name="ModalTabs">
+            <ui:Button name="TabRace" text="RACE RESULT" class="modal-tab modal-tab--active"/>
+            <ui:Button name="TabCompare" text="ALL CIRCUITS" class="modal-tab"/>
+            <ui:Button name="TabQualifying" text="QUALIFYING" class="modal-tab"/>
+        </ui:VisualElement>
+
+        <!-- Page 1: Race result -->
+        <ui:VisualElement name="TabPageRace">
+            <ui:VisualElement name="ModalTopRow">
+                <ui:VisualElement name="ModalScoreCard">
+                    <ui:Label text="EFFICIENCY" class="modal-score-label"/>
+                    <ui:Label name="ModalScore" text="--" class="modal-score-num"/>
+                    <ui:Label text="/100" class="modal-score-denom"/>
+                </ui:VisualElement>
+                <ui:VisualElement name="ModalRightTop">
+                    <ui:VisualElement name="ModalRatingBox">
+                        <ui:Label text="CIRCUIT RATING" class="modal-rating-label"/>
+                        <ui:Label name="ModalRating" text="——" class="modal-rating-val"/>
+                    </ui:VisualElement>
+                    <ui:VisualElement name="ModalMiniRow">
+                        <ui:VisualElement class="modal-mini-stat">
+                            <ui:Label text="LAP TIME" class="modal-ms-label"/>
+                            <ui:Label name="ModalLapTime" text="--" class="modal-ms-val"/>
+                        </ui:VisualElement>
+                        <ui:VisualElement class="modal-mini-stat">
+                            <ui:Label text="SPEED" class="modal-ms-label"/>
+                            <ui:Label name="ModalSpeed" text="--" class="modal-ms-val"/>
+                        </ui:VisualElement>
+                        <ui:VisualElement class="modal-mini-stat">
+                            <ui:Label text="CORNERING" class="modal-ms-label"/>
+                            <ui:Label name="ModalCornering" text="--" class="modal-ms-val"/>
+                        </ui:VisualElement>
+                    </ui:VisualElement>
+                </ui:VisualElement>
+            </ui:VisualElement>
+
+            <!--
+                These four bars show CIRCUIT MATCH scores (downforceMatch,
+                dragMatch, engineMatch, tyreMatch), the same values as the
+                sidebar's Circuit Fit panel, not raw physical car stats.
+            -->
+            <ui:VisualElement name="ModalBars">
+                <ui:VisualElement class="modal-bar-row">
+                    <ui:Label text="DOWNFORCE" class="modal-bar-label"/>
+                    <ui:VisualElement class="modal-bar-track">
+                        <ui:VisualElement name="ModalBarDownforce" class="modal-bar-fill"/>
+                    </ui:VisualElement>
+                    <ui:Label name="ModalBarDownforceVal" text="--" class="modal-bar-val"/>
+                </ui:VisualElement>
+                <ui:VisualElement class="modal-bar-row">
+                    <ui:Label text="DRAG" class="modal-bar-label"/>
+                    <ui:VisualElement class="modal-bar-track">
+                        <ui:VisualElement name="ModalBarSpeed" class="modal-bar-fill"/>
+                    </ui:VisualElement>
+                    <ui:Label name="ModalBarSpeedVal" text="--" class="modal-bar-val"/>
+                </ui:VisualElement>
+                <ui:VisualElement class="modal-bar-row">
+                    <ui:Label text="ENGINE" class="modal-bar-label"/>
+                    <ui:VisualElement class="modal-bar-track">
+                        <ui:VisualElement name="ModalBarCornering" class="modal-bar-fill"/>
+                    </ui:VisualElement>
+                    <ui:Label name="ModalBarCorneringVal" text="--" class="modal-bar-val"/>
+                </ui:VisualElement>
+                <ui:VisualElement class="modal-bar-row">
+                    <ui:Label text="TYRE WEAR" class="modal-bar-label"/>
+                    <ui:VisualElement class="modal-bar-track">
+                        <ui:VisualElement name="ModalBarReliability" class="modal-bar-fill"/>
+                    </ui:VisualElement>
+                    <ui:Label name="ModalBarReliabilityVal" text="--" class="modal-bar-val"/>
+                </ui:VisualElement>
+            </ui:VisualElement>
+
+            <ui:VisualElement name="ModalDebrief">
+                <ui:Label text="ENGINEER DEBRIEF" class="modal-debrief-title"/>
+                <ui:VisualElement name="ModalDebriefItems"/>
+            </ui:VisualElement>
+        </ui:VisualElement>
+
+        <!-- Page 2: All circuits comparison -->
+        <ui:VisualElement name="TabPageCompare" style="display: none;">
+            <ui:Label name="CompareTitle" text="YOUR BUILD ACROSS ALL 8 CIRCUITS" class="compare-title"/>
+            <ui:Label name="CompareSub" text="SAME CAR · DIFFERENT TRACKS" class="compare-sub"/>
+            <ui:ScrollView name="CircuitLeaderboard"
+                vertical-scroller-visibility="Hidden"
+                horizontal-scroller-visibility="Hidden"/>
+        </ui:VisualElement>
+
+        <!-- Page 3: Qualifying + Race Projection -->
+        <ui:VisualElement name="TabPageQualifying" style="display: none;">
+            <ui:Label text="ESTIMATED QUALIFYING PACE" class="compare-title"/>
+            <ui:Label text="BASED ON YOUR CIRCUIT FIT SCORE + DRIVER EXECUTION" class="compare-sub"/>
+
+            <ui:VisualElement name="QualiPositionCard" class="modal-score-card">
+                <ui:Label text="ESTIMATED GRID POSITION" class="modal-score-label"/>
+                <ui:Label name="QualiPosition" text="--" class="modal-score-num"/>
+                <ui:Label name="QualiPositionLabel" text="——" class="modal-rating-val"/>
+            </ui:VisualElement>
+
+            <ui:VisualElement name="QualiTimeRow" class="modal-mini-row">
+                <ui:VisualElement class="modal-mini-stat">
+                    <ui:Label text="ESTIMATED LAP" class="modal-ms-label"/>
+                    <ui:Label name="QualiEstimatedLap" text="--" class="modal-ms-val"/>
+                </ui:VisualElement>
+                <ui:VisualElement class="modal-mini-stat">
+                    <ui:Label text="TRACK RECORD" class="modal-ms-label"/>
+                    <ui:Label name="QualiRecordLap" text="--" class="modal-ms-val"/>
+                </ui:VisualElement>
+                <ui:VisualElement class="modal-mini-stat">
+                    <ui:Label text="GAP TO RECORD" class="modal-ms-label"/>
+                    <ui:Label name="QualiGap" text="--" class="modal-ms-val"/>
+                </ui:VisualElement>
+            </ui:VisualElement>
+
+            <ui:Label name="QualiRecordHolder" text="" class="live-match-hint"/>
+
+            <ui:VisualElement name="RaceProjectionDivider" class="card-divider"/>
+
+            <ui:Label text="RACE PROJECTION" class="compare-title"/>
+            <ui:Label text="STARTING FROM YOUR ESTIMATED GRID SLOT" class="compare-sub"/>
+
+            <ui:VisualElement name="RaceResultRow" class="modal-mini-row">
+                <ui:VisualElement class="modal-mini-stat">
+                    <ui:Label text="GRID" class="modal-ms-label"/>
+                    <ui:Label name="RaceGridPos" text="--" class="modal-ms-val"/>
+                </ui:VisualElement>
+                <ui:VisualElement class="modal-mini-stat">
+                    <ui:Label text="FINISH" class="modal-ms-label"/>
+                    <ui:Label name="RaceFinishPos" text="--" class="modal-ms-val"/>
+                </ui:VisualElement>
+                <ui:VisualElement class="modal-mini-stat">
+                    <ui:Label text="TOTAL TIME" class="modal-ms-label"/>
+                    <ui:Label name="RaceTotalTime" text="--" class="modal-ms-val"/>
+                </ui:VisualElement>
+            </ui:VisualElement>
+
+            <ui:Label name="RaceTrendLabel" text="——" class="modal-rating-val"/>
+        </ui:VisualElement>
+
+        <!-- Buttons -->
+        <ui:VisualElement name="ModalButtonRow">
+            <ui:Button name="BtnModalClose" text="ADJUST BUILD"/>
+            <ui:Button name="BtnModalNewCircuit" text="NEW CIRCUIT →"/>
+            <ui:Button name="BtnRaceWithBuild" text="RACE WITH THIS BUILD →"/>
+        </ui:VisualElement>
+
+         </ui:VisualElement>
+        </ui:VisualElement>
+
+    </ui:VisualElement>
+</ui:UXML>

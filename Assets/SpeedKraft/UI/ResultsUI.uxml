@@ -1,0 +1,133 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+    <Style src="ResultsStyles.uss"/>
+    <ui:VisualElement name="Root">
+
+        <!-- Header -->
+        <ui:VisualElement name="Header">
+            <ui:VisualElement name="HeaderLeft">
+                <ui:Label name="HeaderSub" text="POST-BUILD ANALYSIS"/>
+                <ui:Label name="HeaderTitle" text="RACE REPORT"/>
+            </ui:VisualElement>
+            <ui:VisualElement name="HeaderRight">
+                <ui:VisualElement name="HeaderCircuitInfo">
+                    <ui:Label name="HeaderCircuitLabel" text="CIRCUIT"/>
+                    <ui:Label name="HeaderCircuitName" text="——"/>
+                </ui:VisualElement>
+                <ui:VisualElement name="HeaderFlag"/>
+            </ui:VisualElement>
+        </ui:VisualElement>
+
+        <!-- Scrollable content -->
+        <ui:ScrollView name="ResultsScroll"
+            vertical-scroller-visibility="Hidden"
+            horizontal-scroller-visibility="Hidden">
+
+            <!-- Top row: score + rating -->
+            <ui:VisualElement name="TopRow">
+
+                <ui:VisualElement name="ScoreCard">
+                    <ui:Label name="ScoreLabel" text="EFFICIENCY"/>
+                    <ui:Label name="ScoreNumber" text="--"/>
+                    <ui:Label name="ScoreDenom" text="/100"/>
+                </ui:VisualElement>
+
+                <ui:VisualElement name="RightTop">
+                    <ui:VisualElement name="RatingBox">
+                        <ui:Label name="RatingLabel" text="CIRCUIT RATING"/>
+                        <ui:Label name="RatingValue" text="——"/>
+                    </ui:VisualElement>
+                    <ui:VisualElement name="MiniRow">
+                        <ui:VisualElement class="mini-stat">
+                            <ui:Label text="LAP TIME" class="ms-label"/>
+                            <ui:Label name="LapTimeValue" text="--" class="ms-val"/>
+                        </ui:VisualElement>
+                        <ui:VisualElement class="mini-stat">
+                            <ui:Label text="CORNERING" class="ms-label"/>
+                            <ui:Label name="CorneringValue" text="--" class="ms-val"/>
+                        </ui:VisualElement>
+                        <ui:VisualElement class="mini-stat">
+                            <ui:Label text="SPEED" class="ms-label"/>
+                            <ui:Label name="SpeedValue" text="--" class="ms-val"/>
+                        </ui:VisualElement>
+                    </ui:VisualElement>
+                </ui:VisualElement>
+
+            </ui:VisualElement>
+
+            <!-- Telemetry grid -->
+            <ui:Label name="TeleTitle" text="TELEMETRY BREAKDOWN" class="section-title"/>
+            <ui:VisualElement name="TeleGrid">
+                <ui:VisualElement class="tele-cell">
+                    <ui:Label text="DOWNFORCE" class="tc-label"/>
+                    <ui:Label name="TeleDownforce" text="--" class="tc-val"/>
+                </ui:VisualElement>
+                <ui:VisualElement class="tele-cell">
+                    <ui:Label text="DRAG" class="tc-label"/>
+                    <ui:Label name="TeleDrag" text="--" class="tc-val"/>
+                </ui:VisualElement>
+                <ui:VisualElement class="tele-cell">
+                    <ui:Label text="AERO EFF." class="tc-label"/>
+                    <ui:Label name="TeleAero" text="--" class="tc-val"/>
+                </ui:VisualElement>
+                <ui:VisualElement class="tele-cell">
+                    <ui:Label text="RELIABILITY" class="tc-label"/>
+                    <ui:Label name="TeleReliability" text="--" class="tc-val"/>
+                </ui:VisualElement>
+                <ui:VisualElement class="tele-cell">
+                    <ui:Label text="POWER" class="tc-label"/>
+                    <ui:Label name="TelePower" text="--" class="tc-val"/>
+                </ui:VisualElement>
+                <ui:VisualElement class="tele-cell">
+                    <ui:Label text="CIRCUIT MATCH" class="tc-label"/>
+                    <ui:Label name="TeleMatch" text="--" class="tc-val"/>
+                </ui:VisualElement>
+            </ui:VisualElement>
+
+            <!-- Performance bars -->
+            <ui:Label text="PERFORMANCE PROFILE" class="section-title"/>
+            <ui:VisualElement name="BarsContainer">
+                <ui:VisualElement class="bar-row">
+                    <ui:Label text="DOWNFORCE" class="bar-label"/>
+                    <ui:VisualElement class="bar-track">
+                        <ui:VisualElement name="BarDownforce" class="bar-fill"/>
+                    </ui:VisualElement>
+                    <ui:Label name="BarDownforceVal" text="--" class="bar-val"/>
+                </ui:VisualElement>
+                <ui:VisualElement class="bar-row">
+                    <ui:Label text="SPEED" class="bar-label"/>
+                    <ui:VisualElement class="bar-track">
+                        <ui:VisualElement name="BarSpeed" class="bar-fill"/>
+                    </ui:VisualElement>
+                    <ui:Label name="BarSpeedVal" text="--" class="bar-val"/>
+                </ui:VisualElement>
+                <ui:VisualElement class="bar-row">
+                    <ui:Label text="CORNERING" class="bar-label"/>
+                    <ui:VisualElement class="bar-track">
+                        <ui:VisualElement name="BarCornering" class="bar-fill"/>
+                    </ui:VisualElement>
+                    <ui:Label name="BarCorneringVal" text="--" class="bar-val"/>
+                </ui:VisualElement>
+                <ui:VisualElement class="bar-row">
+                    <ui:Label text="RELIABILITY" class="bar-label"/>
+                    <ui:VisualElement class="bar-track">
+                        <ui:VisualElement name="BarReliability" class="bar-fill"/>
+                    </ui:VisualElement>
+                    <ui:Label name="BarReliabilityVal" text="--" class="bar-val"/>
+                </ui:VisualElement>
+            </ui:VisualElement>
+
+            <!-- Engineer debrief -->
+            <ui:VisualElement name="Debrief">
+                <ui:Label name="DebriefTitle" text="ENGINEER DEBRIEF"/>
+                <ui:VisualElement name="DebriefItems"/>
+            </ui:VisualElement>
+
+            <!-- Buttons -->
+            <ui:VisualElement name="ButtonRow">
+                <ui:Button name="BtnNewCircuit" text="TRY ANOTHER CIRCUIT →"/>
+                <ui:Button name="BtnRebuild" text="REBUILD"/>
+            </ui:VisualElement>
+
+        </ui:ScrollView>
+    </ui:VisualElement>
+</ui:UXML>

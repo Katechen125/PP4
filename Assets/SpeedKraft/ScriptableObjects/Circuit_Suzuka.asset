@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8bfb85a1c9f9bd445938c2c3a9e97f6f, type: 3}
+  m_Name: Circuit_Suzuka
+  m_EditorClassIdentifier: Assembly-CSharp::Circuit
+  circuitName: Suzuka
+  country: Japan
+  region: Asia
+  circuitType: Technical
+  trackLayout: {fileID: 21300000, guid: 0f042611f87a78843afac2f121b6224b, type: 3}
+  lapLengthKm: 5.807
+  raceLaps: 53
+  topSpeedKmh: 320
+  flagSprite: {fileID: 21300000, guid: 420ee854acd9103498a84999fa7f5a90, type: 3}
+  downforceRequirement: 80
+  dragSensitivity: 40
+  tyreStress: 70
+  brakeStress: 75
+  engineDemand: 65
+  tags:
+  - TECHNICAL
+  - HIGH DOWNFORCE
+  lapRecordTime: 1:30.983
+  lapRecordHolder: Lewis Hamilton
