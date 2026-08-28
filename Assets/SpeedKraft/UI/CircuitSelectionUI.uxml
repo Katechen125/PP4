@@ -14,13 +14,13 @@
 
             <ui:VisualElement name="GridPanel">
                 <ui:Label name="GridLabel" text="CHOOSE A CIRCUIT"/>
-                <ui:ScrollView name="CircuitGrid"
+                <ui:ScrollView name="CircuitGrid" mode="Vertical"
                     vertical-scroller-visibility="Hidden"
                     horizontal-scroller-visibility="Hidden"/>
             </ui:VisualElement>
 
             <ui:VisualElement name="PreviewPanel">
-                <ui:ScrollView name="PreviewScroll"
+                <ui:ScrollView name="PreviewScroll" mode="Vertical"
                     vertical-scroller-visibility="Hidden"
                     horizontal-scroller-visibility="Hidden">
 

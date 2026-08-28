@@ -66,7 +66,15 @@ public class GameManager : MonoBehaviour
     private const string LeaderboardKey = "Leaderboard";
 
     // Crash
-    public bool isCrashing = false;
+    // Multiple collisions in quick succession (e.g. sliding along a wall)
+    // each start their own NshakePlatform coroutine. With a plain bool,
+    // whichever coroutine finished LAST decided the final state, so an
+    // earlier-finishing coroutine could set isCrashing = false while a
+    // later one was still running, or vice versa, leaving it stuck. A
+    // ref-count fixes this: isCrashing is only false when every active
+    // shake coroutine has actually finished.
+    private int crashShakeCount = 0;
+    public bool isCrashing => crashShakeCount > 0;
 
     void Awake()
     {
@@ -294,40 +302,43 @@ public class GameManager : MonoBehaviour
     {
         if (predictionText == null) return;
 
-        var loaded = buildImporter != null ? buildImporter.LoadedBuild : null;
-        if (loaded == null)
+        if (buildImporter == null || buildImporter.LoadedResult == null)
         {
             predictionText.text = "";
             return;
         }
 
+        var result = buildImporter.LoadedResult;
+        var quali = buildImporter.LoadedQuali;
+        var race = buildImporter.LoadedRace;
+
         var lines = new System.Text.StringBuilder();
-        lines.AppendLine($"SPEEDKRAFT PREDICTION — {loaded.circuitName.ToUpper()} ({loaded.circuitRating})");
+        lines.AppendLine($"SPEEDKRAFT PREDICTION — {buildImporter.LoadedCircuitName.ToUpper()} ({result.circuitRating})");
 
         // Best lap vs SPEEDKRAFT's estimated qualifying lap
-        if (loaded.estimatedQualiLapSeconds > 0f && bestLapTime < Mathf.Infinity)
+        if (quali != null && quali.isValid && bestLapTime < Mathf.Infinity)
         {
-            float lapDiff = bestLapTime - loaded.estimatedQualiLapSeconds;
+            float lapDiff = bestLapTime - quali.estimatedLapTimeSeconds;
             string lapVerdict = Mathf.Abs(lapDiff) <= 2f
                 ? "SPOT ON"
                 : (lapDiff < 0f ? "BEAT THE PREDICTION" : "SLOWER THAN PREDICTED");
 
             lines.AppendLine(
-                $"Predicted lap {FormatTime(loaded.estimatedQualiLapSeconds)}  |  " +
+                $"Predicted lap {FormatTime(quali.estimatedLapTimeSeconds)}  |  " +
                 $"Actual best {FormatTime(bestLapTime)}  |  {lapVerdict} " +
                 $"({(lapDiff >= 0f ? "+" : "")}{lapDiff:0.0}s)");
         }
 
         // Total race time vs SPEEDKRAFT's projected race time
-        if (loaded.totalRaceTimeSeconds > 0f)
+        if (race != null && race.isValid)
         {
-            float raceDiff = raceTimer - loaded.totalRaceTimeSeconds;
+            float raceDiff = raceTimer - race.totalRaceTimeSeconds;
             string raceVerdict = Mathf.Abs(raceDiff) <= 3f
                 ? "MATCHED THE PROJECTION"
                 : (raceDiff < 0f ? "FASTER THAN PROJECTED" : "SLOWER THAN PROJECTED");
 
             lines.AppendLine(
-                $"Projected race {FormatTime(loaded.totalRaceTimeSeconds)}  |  " +
+                $"Projected race {FormatTime(race.totalRaceTimeSeconds)}  |  " +
                 $"Actual {FormatTime(raceTimer)}  |  {raceVerdict} " +
                 $"({(raceDiff >= 0f ? "+" : "")}{raceDiff:0.0}s)");
         }
@@ -548,7 +559,7 @@ public class GameManager : MonoBehaviour
 
     IEnumerator NshakePlatform(float intensity, float duration)
     {
-        isCrashing = true;
+        crashShakeCount++;
         float curTime = duration;
 
         while (curTime > 0)
@@ -568,7 +579,7 @@ public class GameManager : MonoBehaviour
             yield return null;
         }
 
-        isCrashing = false;
+        crashShakeCount = Mathf.Max(0, crashShakeCount - 1);
     }
 
     IEnumerator CollisionFeedback(float force)

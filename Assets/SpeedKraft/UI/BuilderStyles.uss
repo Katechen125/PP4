@@ -6,7 +6,8 @@
 }
 
 #CategoryPanel {
-    width: 170px;
+    width: 12%;
+    min-width: 200px;
     background-color: rgb(18, 13, 8);
     padding: 14px 0px 0px 0px;
     border-right-width: 1px;
@@ -18,7 +19,7 @@
 
 #AppTitle {
     color: rgb(255, 107, 26);
-    font-size: 10px;
+    font-size: 14px;
     -unity-font-style: bold;
     letter-spacing: 2px;
     margin-bottom: 1px;
@@ -28,7 +29,7 @@
 
 #AppSubtitle {
     color: rgb(140, 105, 65);
-    font-size: 8px;
+    font-size: 11px;
     letter-spacing: 1.5px;
     margin-bottom: 14px;
     -unity-text-align: upper-center;
@@ -58,13 +59,13 @@
 }
 
 #ProgressLabel {
-    font-size: 8px;
+    font-size: 11px;
     color: rgb(90, 68, 42);
     letter-spacing: 1px;
 }
 
 #ProgressCount {
-    font-size: 9px;
+    font-size: 13px;
     color: rgb(255, 107, 26);
     -unity-font-style: bold;
     letter-spacing: 1px;
@@ -121,21 +122,31 @@
     border-color: rgb(55, 38, 18);
     border-radius: 2px;
     padding: 1px 4px;
-    font-size: 8px;
+    font-size: 11px;
     color: rgb(100, 70, 32);
     letter-spacing: 1px;
     -unity-font-style: bold;
     margin-right: 7px;
 }
 
-.btn-lbl { font-size: 11px; color: rgb(140, 108, 68); letter-spacing: 0.3px; }
-.btn-status { font-size: 9px; color: rgb(70, 52, 28); letter-spacing: 1px; }
+.btn-lbl { font-size: 15px; color: rgb(140, 108, 68); letter-spacing: 0.3px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex-shrink: 1; }
+.btn-status { font-size: 13px; color: rgb(70, 52, 28); letter-spacing: 1px; flex-shrink: 0; margin-left: 6px; }
 
 #MiddlePanel {
     flex: 1;
     padding: 14px 16px 12px 16px;
     background-color: rgb(13, 10, 7);
     min-width: 300px;
+}
+
+#BuildPanel {
+    width: 16%;
+    min-width: 260px;
+    padding: 20px 16px;
+    background-color: rgb(13, 10, 7);
+    border-left-width: 1px;
+    border-left-color: rgb(40, 28, 16);
+    flex-shrink: 0;
 }
 
 #CircuitBanner {
@@ -164,14 +175,14 @@
 #CircuitBannerText { flex: 1; }
 
 #CircuitBannerLabel {
-    font-size: 8px;
+    font-size: 11px;
     color: rgb(80, 60, 34);
     letter-spacing: 1.5px;
     margin-bottom: 1px;
 }
 
 #CircuitBannerName {
-    font-size: 12px;
+    font-size: 17px;
     color: rgb(255, 107, 26);
     -unity-font-style: bold;
     letter-spacing: 1px;
@@ -189,7 +200,7 @@
     border-color: rgba(255, 107, 26, 0.25);
     border-radius: 2px;
     padding: 1px 5px;
-    font-size: 8px;
+    font-size: 11px;
     color: rgb(190, 115, 48);
     letter-spacing: 1px;
     margin-right: 3px;
@@ -205,7 +216,7 @@
 
 #IntroTitle {
     color: rgb(255, 255, 255);
-    font-size: 15px;
+    font-size: 21px;
     -unity-font-style: bold;
     -unity-text-align: upper-left;
     margin-bottom: 4px;
@@ -214,7 +225,7 @@
 
 #IntroSubtitle {
     color: rgb(255, 107, 26);
-    font-size: 9px;
+    font-size: 13px;
     letter-spacing: 1.5px;
     -unity-text-align: upper-left;
     margin-bottom: 10px;
@@ -222,13 +233,13 @@
 
 #IntroDesc {
     color: rgb(140, 108, 72);
-    font-size: 11px;
+    font-size: 15px;
     white-space: normal;
     -unity-text-align: upper-left;
 }
 
 #CategoryLabel {
-    font-size: 18px;
+    font-size: 25px;
     color: rgb(255, 255, 255);
     -unity-font-style: bold;
     margin-bottom: 2px;
@@ -236,24 +247,13 @@
 }
 
 #CategoryCount {
-    font-size: 9px;
+    font-size: 13px;
     color: rgb(110, 82, 52);
     letter-spacing: 1.5px;
     margin-bottom: 12px;
 }
 
 #PartList { flex: 1; }
-
-.part-card {
-    background-color: rgb(22, 16, 10);
-    border-width: 1px;
-    border-color: rgb(40, 30, 18);
-    border-radius: 7px;
-    padding: 11px 13px;
-    margin-bottom: 7px;
-    overflow: hidden;
-    flex-shrink: 0;
-}
 
 .part-card {
     background-color: rgb(22, 16, 10);
@@ -272,7 +272,7 @@
 
 .part-card:hover { border-color: rgb(85, 60, 30); background-color: rgb(26, 19, 11); }
 
-/* ===================== SELECTION FEEDBACK (randomly picked, one per click) ===================== */
+/* ===================== SELECTION FEEDBACK ===================== */
 .part-card--punch {
     scale: 1.035 1.035;
 }
@@ -331,18 +331,18 @@
 .name-col { flex: 1; min-width: 0; flex-shrink: 1; }
 
 .part-name {
-    font-size: 13px;
+    font-size: 18px;
     color: rgb(240, 225, 205);
     -unity-font-style: bold;
     margin-bottom: 2px;
     white-space: normal;
 }
 
-.part-desc { font-size: 11px; color: rgb(140, 108, 72); white-space: normal; }
+.part-desc { font-size: 15px; color: rgb(140, 108, 72); white-space: normal; }
 
 .equipped-badge {
     color: rgb(255, 107, 26);
-    font-size: 8px;
+    font-size: 11px;
     -unity-font-style: bold;
     letter-spacing: 1px;
     align-self: flex-start;
@@ -372,7 +372,7 @@
 .stat-chip-row { flex-direction: row; align-items: center; }
 
 .stat-chip-icon {
-    font-size: 10px;
+    font-size: 14px;
     color: rgb(255, 107, 26);
     margin-right: 3px;
     -unity-text-align: middle-center;
@@ -381,7 +381,7 @@
     flex-shrink: 0;
 }
 
-.stat-chip-label { font-size: 10px; color: rgb(170, 130, 80); letter-spacing: 0.5px; }
+.stat-chip-label { font-size: 14px; color: rgb(170, 130, 80); letter-spacing: 0.5px; }
 .stat-chip--negative .stat-chip-icon { color: rgb(180, 90, 60); }
 .stat-chip--negative .stat-chip-label { color: rgb(180, 90, 60); }
 
@@ -391,7 +391,7 @@
     border-color: rgb(60, 42, 20);
     border-radius: 3px;
     color: rgb(150, 112, 70);
-    font-size: 10px;
+    font-size: 14px;
     letter-spacing: 1px;
     padding: 5px 12px;
     -unity-font-style: bold;
@@ -401,15 +401,16 @@
 .select-btn:hover { background-color: rgb(255, 107, 26); border-color: rgb(255, 107, 26); color: rgb(255, 255, 255); }
 .select-btn--selected { background-color: rgb(40, 24, 8); border-color: rgb(255, 107, 26); color: rgb(255, 107, 26); }
 
-#BuildTitle { color: rgb(255, 107, 26); font-size: 10px; -unity-font-style: bold; letter-spacing: 2px; margin-bottom: 2px; }
-#BuildSubtitle { color: rgb(90, 68, 42); font-size: 9px; letter-spacing: 1px; margin-bottom: 14px; }
+#BuildTitle { color: rgb(255, 107, 26); font-size: 14px; -unity-font-style: bold; letter-spacing: 2px; margin-bottom: 2px; }
+#BuildSubtitle { color: rgb(90, 68, 42); font-size: 13px; letter-spacing: 1px; margin-bottom: 14px; }
+
 
 #BtnEvaluate {
     background-color: rgb(255, 107, 26);
     border-width: 0;
     border-radius: 3px;
     color: rgb(255, 255, 255);
-    font-size: 10px;
+    font-size: 14px;
     -unity-font-style: bold;
     letter-spacing: 1.5px;
     height: 34px;
@@ -447,7 +448,7 @@
     border-top-color: rgb(255, 107, 26);
     border-radius: 7px;
     padding: 16px;
-    width: 480px;
+    width: 640px;
 }
 
 #ModalHeader {
@@ -461,12 +462,12 @@
 }
 
 #ModalHeaderLeft { flex-direction: column; }
-#ModalSub { font-size: 8px; color: rgb(80, 60, 34); letter-spacing: 2px; margin-bottom: 2px; }
-#ModalTitle { font-size: 16px; color: rgb(255, 255, 255); -unity-font-style: bold; letter-spacing: 2px; }
+#ModalSub { font-size: 13px; color: rgb(80, 60, 34); letter-spacing: 2px; margin-bottom: 2px; }
+#ModalTitle { font-size: 26px; color: rgb(255, 255, 255); -unity-font-style: bold; letter-spacing: 2px; }
 #ModalHeaderRight { flex-direction: row; align-items: center; }
 
 #ModalCircuitName {
-    font-size: 12px;
+    font-size: 17px;
     color: rgb(255, 107, 26);
     -unity-font-style: bold;
     letter-spacing: 1px;
@@ -493,9 +494,9 @@
     margin-right: 10px;
 }
 
-.modal-score-label { font-size: 7px; color: rgba(255,255,255,0.75); letter-spacing: 1.5px; margin-bottom: 1px; }
-.modal-score-num { font-size: 36px; color: rgb(255,255,255); -unity-font-style: bold; letter-spacing: -1px; }
-.modal-score-denom { font-size: 11px; color: rgba(255,255,255,0.65); }
+.modal-score-label { font-size: 10px; color: rgba(255,255,255,0.75); letter-spacing: 1.5px; margin-bottom: 1px; }
+.modal-score-num { font-size: 50px; color: rgb(255,255,255); -unity-font-style: bold; letter-spacing: -1px; }
+.modal-score-denom { font-size: 15px; color: rgba(255,255,255,0.65); }
 
 #ModalRightTop { flex: 1; flex-direction: column; }
 
@@ -508,8 +509,8 @@
     margin-bottom: 5px;
 }
 
-.modal-rating-label { font-size: 7px; color: rgb(80, 60, 34); letter-spacing: 1.5px; margin-bottom: 1px; }
-.modal-rating-val { font-size: 12px; color: rgb(255, 107, 26); -unity-font-style: bold; letter-spacing: 1px; }
+.modal-rating-label { font-size: 10px; color: rgb(80, 60, 34); letter-spacing: 1.5px; margin-bottom: 1px; }
+.modal-rating-val { font-size: 17px; color: rgb(255, 107, 26); -unity-font-style: bold; letter-spacing: 1px; }
 
 #ModalMiniRow { flex-direction: row; }
 .modal-mini-row { flex-direction: row; }
@@ -524,18 +525,18 @@
     margin-right: 4px;
 }
 
-.modal-ms-label { font-size: 7px; color: rgb(80, 60, 34); letter-spacing: 1px; margin-bottom: 1px; }
-.modal-ms-val { font-size: 13px; color: rgb(255, 255, 255); -unity-font-style: bold; }
+.modal-ms-label { font-size: 10px; color: rgb(80, 60, 34); letter-spacing: 1px; margin-bottom: 1px; }
+.modal-ms-val { font-size: 18px; color: rgb(255, 255, 255); -unity-font-style: bold; }
 
 #ModalBars { margin-bottom: 12px; }
 
 .modal-bar-row { flex-direction: row; align-items: center; margin-bottom: 5px; }
-.modal-bar-label { font-size: 9px; color: rgb(100, 75, 45); width: 62px; flex-shrink: 0; }
+.modal-bar-label { font-size: 13px; color: rgb(100, 75, 45); width: 62px; flex-shrink: 0; }
 .modal-bar-track { flex: 1; height: 3px; background-color: rgb(40, 26, 10); border-radius: 2px; }
 .modal-bar-fill { height: 3px; background-color: rgb(255, 107, 26); border-radius: 2px; width: 0%; }
 .modal-bar-fill--good { background-color: rgb(74, 222, 128); }
 .modal-bar-fill--warn { background-color: rgb(255, 140, 60); }
-.modal-bar-val { font-size: 10px; color: rgb(170, 128, 72); -unity-font-style: bold; width: 22px; -unity-text-align: upper-right; }
+.modal-bar-val { font-size: 14px; color: rgb(170, 128, 72); -unity-font-style: bold; width: 22px; -unity-text-align: upper-right; }
 
 #ModalDebrief {
     background-color: rgb(20, 13, 7);
@@ -548,7 +549,7 @@
     margin-bottom: 12px;
 }
 
-.modal-debrief-title { font-size: 7px; color: rgb(255, 107, 26); letter-spacing: 2px; margin-bottom: 6px; }
+.modal-debrief-title { font-size: 10px; color: rgb(255, 107, 26); letter-spacing: 2px; margin-bottom: 6px; }
 .modal-debrief-item { flex-direction: row; align-items: flex-start; margin-bottom: 4px; }
 
 .modal-debrief-dot {
@@ -561,7 +562,7 @@
     margin-right: 7px;
 }
 
-.modal-debrief-text { font-size: 10px; color: rgb(150, 110, 70); white-space: normal; flex: 1; }
+.modal-debrief-text { font-size: 14px; color: rgb(150, 110, 70); white-space: normal; flex: 1; }
 
 #ModalButtonRow { flex-direction: row; }
 
@@ -572,7 +573,7 @@
     border-color: rgb(58, 36, 16);
     border-radius: 3px;
     color: rgb(140, 105, 62);
-    font-size: 10px;
+    font-size: 14px;
     letter-spacing: 1.5px;
     height: 34px;
     margin-right: 6px;
@@ -586,7 +587,7 @@
     border-width: 0;
     border-radius: 3px;
     color: rgb(255, 255, 255);
-    font-size: 10px;
+    font-size: 14px;
     -unity-font-style: bold;
     letter-spacing: 1.5px;
     height: 34px;
@@ -611,7 +612,7 @@
     border-bottom-color: rgba(0,0,0,0);
     border-radius: 0;
     color: rgb(100, 75, 45);
-    font-size: 10px;
+    font-size: 14px;
     -unity-font-style: bold;
     letter-spacing: 1.5px;
     height: 36px;
@@ -629,14 +630,14 @@
 
 /* ===================== COMPARE PAGE ===================== */
 .compare-title {
-    font-size: 9px;
+    font-size: 13px;
     color: rgb(100, 75, 45);
     letter-spacing: 2px;
     margin-bottom: 3px;
 }
 
 .compare-sub {
-    font-size: 8px;
+    font-size: 11px;
     color: rgb(60, 45, 25);
     letter-spacing: 2px;
     margin-bottom: 10px;
@@ -666,7 +667,7 @@
 }
 
 .lb-rank {
-    font-size: 11px;
+    font-size: 15px;
     color: rgb(80, 60, 32);
     -unity-font-style: bold;
     width: 24px;
@@ -688,7 +689,7 @@
 
 .lb-name {
     flex: 1;
-    font-size: 11px;
+    font-size: 15px;
     color: rgb(200, 160, 100);
     -unity-font-style: bold;
 }
@@ -698,7 +699,7 @@
 }
 
 .lb-score {
-    font-size: 13px;
+    font-size: 18px;
     color: rgb(255, 255, 255);
     -unity-font-style: bold;
     width: 36px;
@@ -707,7 +708,7 @@
 }
 
 .lb-rating {
-    font-size: 8px;
+    font-size: 11px;
     letter-spacing: 1px;
     width: 70px;
     -unity-text-align: upper-right;
@@ -741,7 +742,7 @@
     border-color: rgb(255, 107, 26);
     border-radius: 3px;
     color: rgb(255, 107, 26);
-    font-size: 10px;
+    font-size: 14px;
     -unity-font-style: bold;
     letter-spacing: 1.5px;
     height: 34px;
@@ -759,7 +760,7 @@
     border-color: rgb(60, 42, 20);
     border-radius: 3px;
     color: rgb(100, 75, 45);
-    font-size: 12px;
+    font-size: 17px;
     width: 28px;
     height: 28px;
     margin-left: 10px;
@@ -778,7 +779,7 @@
 }
 
 .live-match-heading {
-    font-size: 12px;
+    font-size: 17px;
     letter-spacing: 2px;
     color: rgba(255, 255, 255, 0.4);
     margin-bottom: 16px;
@@ -795,13 +796,13 @@
 }
 
 .live-match-label {
-    font-size: 11px;
+    font-size: 15px;
     letter-spacing: 0.5px;
     color: rgba(255, 255, 255, 0.55);
 }
 
 .live-match-val {
-    font-size: 12px;
+    font-size: 17px;
     -unity-font-style: bold;
     color: rgb(255, 255, 255);
 }
@@ -832,7 +833,7 @@
 }
 
 .live-match-hint {
-    font-size: 10px;
+    font-size: 14px;
     color: rgba(255, 255, 255, 0.35);
     margin-top: 4px;
     -unity-font-style: italic;
@@ -866,7 +867,7 @@
 }
 
 #EvaluatingText {
-    font-size: 15px;
+    font-size: 21px;
     color: rgb(255, 255, 255);
     -unity-font-style: bold;
     letter-spacing: 3px;

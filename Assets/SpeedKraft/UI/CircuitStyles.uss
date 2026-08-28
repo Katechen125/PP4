@@ -22,7 +22,7 @@
 
 #AppTitle {
     color: rgb(255, 107, 26);
-    font-size: 10px;
+    font-size: 14px;
     -unity-font-style: bold;
     letter-spacing: 2px;
     margin-bottom: 1px;
@@ -30,21 +30,21 @@
 
 #AppSubtitle {
     color: rgb(70, 52, 30);
-    font-size: 8px;
+    font-size: 11px;
     letter-spacing: 1.5px;
     margin-bottom: 4px;
 }
 
 #ScreenTitle {
     color: rgb(255, 255, 255);
-    font-size: 18px;
+    font-size: 25px;
     -unity-font-style: bold;
     letter-spacing: 1.5px;
 }
 
 #HeaderRight {
     color: rgb(100, 75, 45);
-    font-size: 10px;
+    font-size: 14px;
     letter-spacing: 1.5px;
 }
 
@@ -55,7 +55,8 @@
 }
 
 #GridPanel {
-    width: 200px;
+    width: 11%;
+    min-width: 200px;
     background-color: rgb(16, 12, 8);
     border-right-width: 1px;
     border-right-color: rgb(40, 28, 16);
@@ -65,7 +66,7 @@
 }
 
 #GridLabel {
-    font-size: 9px;
+    font-size: 13px;
     color: rgb(90, 68, 38);
     letter-spacing: 1.5px;
     margin-bottom: 8px;
@@ -119,7 +120,7 @@
 }
 
 .circuit-card-name {
-    font-size: 12px;
+    font-size: 17px;
     color: rgb(200, 160, 100);
     -unity-font-style: bold;
     margin-bottom: 1px;
@@ -130,7 +131,7 @@
 }
 
 .circuit-card-type {
-    font-size: 9px;
+    font-size: 13px;
     color: rgb(80, 60, 32);
     letter-spacing: 0.5px;
 }
@@ -153,10 +154,10 @@
     background-color: rgb(240, 230, 215);
     align-items: center;
     justify-content: center;
-    padding: 14px;
+    padding: 24px;
     margin: 8px 8px 4px 8px;
     border-radius: 8px;
-    height: 240px;
+    height: 420px;
     flex-shrink: 0;
     overflow: hidden;
     position: relative;
@@ -199,7 +200,7 @@
 }
 
 #CircuitName {
-    font-size: 20px;
+    font-size: 28px;
     color: rgb(255, 255, 255);
     -unity-font-style: bold;
     letter-spacing: 1px;
@@ -207,7 +208,7 @@
 }
 
 #CircuitSub {
-    font-size: 10px;
+    font-size: 14px;
     color: rgb(90, 68, 38);
     letter-spacing: 1.5px;
 }
@@ -225,7 +226,7 @@
     border-color: rgba(255, 107, 26, 0.3);
     border-radius: 2px;
     padding: 2px 7px;
-    font-size: 9px;
+    font-size: 13px;
     color: rgb(255, 140, 60);
     letter-spacing: 1.5px;
     margin-right: 4px;
@@ -242,14 +243,14 @@
 }
 
 .stat-lbl {
-    font-size: 9px;
+    font-size: 13px;
     color: rgb(80, 60, 32);
     letter-spacing: 1.5px;
     margin-bottom: 2px;
 }
 
 .stat-val {
-    font-size: 14px;
+    font-size: 20px;
     color: rgb(220, 185, 130);
     -unity-font-style: bold;
     letter-spacing: 0.5px;
@@ -264,7 +265,7 @@
     border-width: 0;
     border-radius: 3px;
     color: rgb(255, 255, 255);
-    font-size: 11px;
+    font-size: 15px;
     -unity-font-style: bold;
     letter-spacing: 2px;
     height: 40px;
@@ -277,7 +278,7 @@
 }
 
 #ScrollHint {
-    font-size: 9px;
+    font-size: 13px;
     color: rgb(90, 68, 38);
     letter-spacing: 2px;
     -unity-text-align: upper-center;
@@ -289,10 +290,6 @@
 }
 
 /* ===================== MISSION LOCK-IN SEQUENCE ===================== */
-/* Corner brackets snap onto the track image, a stamp punches in, and a
-   quick flash sells the "target locked" moment before switching to the
-   builder. All start invisible and are only driven by script in
-   LockInSequence(). */
 .lock-corner {
     position: absolute;
     width: 30px;
@@ -349,7 +346,7 @@
 }
 
 #LockStamp {
-    font-size: 24px;
+    font-size: 34px;
     color: rgb(255, 255, 255);
     -unity-font-style: bold;
     letter-spacing: 4px;

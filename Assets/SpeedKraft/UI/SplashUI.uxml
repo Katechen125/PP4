@@ -21,7 +21,7 @@
         </ui:VisualElement>
 
         <ui:VisualElement name="HudTR">
-            <ui:Label name="HudTR1" text="2025 SEASON"/>
+            <ui:Label name="HudTR1" text="2026 SEASON"/>
             <ui:Label name="HudTR2" text="CAR.CFG · READY"/>
         </ui:VisualElement>
 
@@ -78,7 +78,7 @@
                 <ui:Label name="Step3" text="03 EVALUATE" class="bottom-step"/>
                 <ui:Label name="Step4" text="04 RACE" class="bottom-step"/>
             </ui:VisualElement>
-            <ui:Label name="BottomRight" text="SPEEDKRAFT · 2025"/>
+            <ui:Label name="BottomRight" text="SPEEDKRAFT · 2026"/>
         </ui:VisualElement>
 
         <!-- Garage doors: 0 width until BtnStart is clicked, then grow to

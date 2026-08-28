@@ -14,13 +14,26 @@ public class BuildGameManager : MonoBehaviour
 
     void Awake()
     {
+        Debug.Log($"[BuildGameManager] Awake called on '{gameObject.name}' " +
+                   $"(instance ID {GetInstanceID()}), current Instance is " +
+                   $"{(Instance == null ? "null" : Instance.GetInstanceID().ToString())}");
+
         if (Instance != null && Instance != this)
         {
+            Debug.Log($"[BuildGameManager] Duplicate detected, destroying '{gameObject.name}'.");
             Destroy(gameObject);
             return;
         }
         Instance = this;
         DontDestroyOnLoad(gameObject);
+        Debug.Log($"[BuildGameManager] DontDestroyOnLoad applied to '{gameObject.name}' " +
+                   $"(instance ID {GetInstanceID()}).");
+    }
+
+    void OnDestroy()
+    {
+        Debug.Log($"[BuildGameManager] OnDestroy called on '{gameObject.name}' " +
+                   $"(instance ID {GetInstanceID()}).");
     }
 
     public void SelectPart(CarPart part)

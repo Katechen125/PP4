@@ -112,7 +112,7 @@
             </ui:VisualElement>
             <ui:Label name="CategoryLabel" text="FRONT WING"/>
             <ui:Label name="CategoryCount" text="3 OPTIONS AVAILABLE"/>
-            <ui:ScrollView name="PartList"
+            <ui:ScrollView name="PartList" mode="Vertical"
                 vertical-scroller-visibility="Hidden"
                 horizontal-scroller-visibility="Hidden"/>
         </ui:VisualElement>
@@ -327,10 +327,16 @@
                     <ui:Label name="RaceFinishPos" text="--" class="modal-ms-val"/>
                 </ui:VisualElement>
                 <ui:VisualElement class="modal-mini-stat">
+                    <ui:Label text="AVG RACE LAP" class="modal-ms-label"/>
+                    <ui:Label name="RaceAvgLap" text="--" class="modal-ms-val"/>
+                </ui:VisualElement>
+                <ui:VisualElement class="modal-mini-stat">
                     <ui:Label text="TOTAL TIME" class="modal-ms-label"/>
                     <ui:Label name="RaceTotalTime" text="--" class="modal-ms-val"/>
                 </ui:VisualElement>
             </ui:VisualElement>
+
+            <ui:Label name="RaceLapCompareLabel" text="" class="live-match-hint"/>
 
             <ui:Label name="RaceTrendLabel" text="——" class="modal-rating-val"/>
         </ui:VisualElement>
