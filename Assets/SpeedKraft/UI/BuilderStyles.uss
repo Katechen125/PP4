@@ -484,7 +484,7 @@
 #ModalTopRow { flex-direction: row; margin-bottom: 12px; }
 
 #ModalScoreCard {
-    width: 90px;
+     width: 130px;
     background-color: rgb(255, 107, 26);
     border-radius: 5px;
     padding: 10px 8px;
@@ -495,7 +495,7 @@
 }
 
 .modal-score-label { font-size: 10px; color: rgba(255,255,255,0.75); letter-spacing: 1.5px; margin-bottom: 1px; }
-.modal-score-num { font-size: 50px; color: rgb(255,255,255); -unity-font-style: bold; letter-spacing: -1px; }
+.modal-score-num { font-size: 44px; color: rgb(255,255,255); -unity-font-style: bold; letter-spacing: -1px; }
 .modal-score-denom { font-size: 15px; color: rgba(255,255,255,0.65); }
 
 #ModalRightTop { flex: 1; flex-direction: column; }
@@ -531,12 +531,12 @@
 #ModalBars { margin-bottom: 12px; }
 
 .modal-bar-row { flex-direction: row; align-items: center; margin-bottom: 5px; }
-.modal-bar-label { font-size: 13px; color: rgb(100, 75, 45); width: 62px; flex-shrink: 0; }
-.modal-bar-track { flex: 1; height: 3px; background-color: rgb(40, 26, 10); border-radius: 2px; }
+.modal-bar-label { font-size: 18px; color: rgb(100, 75, 45); width: 170px; flex-shrink: 0; }
+.modal-bar-track { flex: 1; height: 4px; margin-left: 12px; margin-right: 12px; background-color: rgb(40, 26, 10); border-radius: 2px; }
 .modal-bar-fill { height: 3px; background-color: rgb(255, 107, 26); border-radius: 2px; width: 0%; }
 .modal-bar-fill--good { background-color: rgb(74, 222, 128); }
 .modal-bar-fill--warn { background-color: rgb(255, 140, 60); }
-.modal-bar-val { font-size: 14px; color: rgb(170, 128, 72); -unity-font-style: bold; width: 22px; -unity-text-align: upper-right; }
+.modal-bar-val { font-size: 20px; color: rgb(170, 128, 72); -unity-font-style: bold; width: 64px; flex-shrink: 0; -unity-text-align: upper-right; }
 
 #ModalDebrief {
     background-color: rgb(20, 13, 7);

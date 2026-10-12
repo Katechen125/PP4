@@ -38,6 +38,15 @@ public class CarControl : MonoBehaviour
     private const float DW_SteeringRange = 28f;
     private const float DW_SteeringRangeMax = 8f;
 
+    [Header("Pedal Feel (solo teclado)")]
+    public float throttleRise = 3f;     // gas sube en ~0.33s
+    public float throttleFall = 6f;     // gas baja en ~0.17s
+    public float brakeRise = 8f;
+    public float brakeFall = 10f;
+    public float engineBrakeLow = 250f;   // freno motor al soltar a baja velocidad
+    public float engineBrakeHigh = 1200f; // freno motor a 200 km/h
+    private float smoothGas, smoothBrake;
+
     [Header("Gear System")]
     public int totalGears = 6;
 
@@ -115,7 +124,7 @@ public class CarControl : MonoBehaviour
     void OnEnable() { carControls.Enable(); }
     void OnDisable() { carControls.Disable(); }
 
-  
+
     public void ApplyInputPreset()
     {
         if (inputMode == InputMode.Keyboard)
@@ -256,7 +265,7 @@ public class CarControl : MonoBehaviour
             GameManager.Instance.ReplayRace();
 
         if (carControls.Car.Quit.WasPerformedThisFrame())
-           Application.Quit();
+            Application.Quit();
 
         if (carControls.Car.Camera.WasPerformedThisFrame())
         {
@@ -374,6 +383,22 @@ public class CarControl : MonoBehaviour
         float gas = Mathf.Max(0f, rawY);
         float brake = Mathf.Max(0f, -rawY);
 
+        if (inputMode == InputMode.Keyboard)
+        {
+            float dt = Time.fixedDeltaTime;
+            smoothGas = Mathf.MoveTowards(smoothGas, gas,
+                (gas > smoothGas ? throttleRise : throttleFall) * dt);
+            smoothBrake = Mathf.MoveTowards(smoothBrake, brake,
+                (brake > smoothBrake ? brakeRise : brakeFall) * dt);
+
+            // Pasar de gas a freno (o al reves) es inmediato, sin traslape.
+            if (brake > 0.01f) smoothGas = 0f;
+            if (gas > 0.01f) smoothBrake = 0f;
+
+            gas = smoothGas;
+            brake = smoothBrake;
+        }
+
         float hInput = ApplySteeringCurve(rawH);
 
         // Platform motion
@@ -464,7 +489,7 @@ public class CarControl : MonoBehaviour
             if (currentGear == 0)
             {
                 wheel.WheelCollider.motorTorque = 0f;
-                wheel.WheelCollider.brakeTorque = 0f;
+                wheel.WheelCollider.brakeTorque = brake * brakeTorque;
             }
             else if (currentGear == -1)
             {
@@ -504,8 +529,7 @@ public class CarControl : MonoBehaviour
                     rigidBody.linearDamping = 0f;
                     wheel.WheelCollider.motorTorque = 0f;
 
-                    float brakeScale = Mathf.Lerp(0.5f, 1f,
-                        Mathf.InverseLerp(200f, 0f, speedKMH));
+                    float brakeScale = 1f;
                     wheel.WheelCollider.brakeTorque =
                         brake * brakeTorque * brakeScale;
                 }
@@ -516,8 +540,9 @@ public class CarControl : MonoBehaviour
 
                     if (wheel.motorized)
                     {
-                        float engineBrake = Mathf.Lerp(0f, 600f,
-                            Mathf.InverseLerp(0f, 200f, speedKMH));
+                        float engineBrake = speedKMH < 2f ? 0f
+                            : Mathf.Lerp(engineBrakeLow, engineBrakeHigh,
+                                Mathf.InverseLerp(0f, 200f, speedKMH));
                         wheel.WheelCollider.brakeTorque = engineBrake;
                     }
                     else

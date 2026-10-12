@@ -33,6 +33,26 @@ public class PhysicsAICar : MonoBehaviour
     public float offsetChangeRadius = 8f;
     private float currentLateralOffset = 0f;
 
+    [Header("Aggressor")]
+    public bool isAggressor = false;
+    public float aggressorSpeedKmh = 150f;
+    public float targetSearchRadius = 80f;
+    public float aimBehindDistance = 3f;
+    [Range(0.3f, 1f)]
+    public float lurkSpeedFactor = 0.6f;
+    private Transform chaseTarget;
+    private bool isChasing;
+    private float retargetTimer;
+    private PhysicsAICar[] allAI;
+    private AggressorRam ram;
+
+    [Header("Auto Respawn")]
+    public float stuckSpeedKmh = 3f;
+    public float stuckSeconds = 3f;
+    public float flippedSeconds = 2f;
+    public float respawnGraceSeconds = 4f;
+    private float stuckTimer, flippedTimer, graceTimer;
+
     [Header("Race")]
     public bool raceStarted = false;
 
@@ -81,6 +101,11 @@ public class PhysicsAICar : MonoBehaviour
         currentLateralOffset = Random.Range(
             -lateralOffsetAmount, lateralOffsetAmount);
         GenerateWaypointOffset();
+
+        if (isAggressor)
+            Debug.Log($"[Aggressor] {gameObject.name} is the aggressor. " +
+                      $"AggressorRam found: {GetComponentInChildren<AggressorRam>() != null}, " +
+                      $"playerCar found: {playerCar != null}");
     }
 
     // Call this from StartLights when lights go out
@@ -105,6 +130,8 @@ public class PhysicsAICar : MonoBehaviour
         }
 
         lapTime += Time.fixedDeltaTime;
+
+        CheckStuck();
 
         UpdateTargetSpeed();
         HandleWaypointProgress();
@@ -164,8 +191,7 @@ public class PhysicsAICar : MonoBehaviour
 
     void DriveTowardsWaypoint()
     {
-        Vector3 targetPosition = waypoints[currentWaypointIndex].position
-                                 + currentWaypointOffset;
+        Vector3 targetPosition = GetDriveTarget();
 
         // Steering
         Vector3 localTarget = transform.InverseTransformPoint(targetPosition);
@@ -183,7 +209,11 @@ public class PhysicsAICar : MonoBehaviour
         float engineTorque = 0f;
         float brakeTorque = 0f;
 
-        if (currentSpeedKmh < targetSpeedKmh)
+        float desiredSpeed = isChasing ? aggressorSpeedKmh
+                           : (isAggressor ? targetSpeedKmh * lurkSpeedFactor
+                                          : targetSpeedKmh);
+
+        if (currentSpeedKmh < desiredSpeed)
         {
             engineTorque = maxEngineTorque * (1f - (steeringSeverity * 0.7f));
             brakeTorque = 0f;
@@ -203,6 +233,98 @@ public class PhysicsAICar : MonoBehaviour
         // Keep front wheels from holding brake torque
         frontLeftWheel.brakeTorque = 0f;
         frontRightWheel.brakeTorque = 0f;
+    }
+
+    Vector3 GetDriveTarget()
+    {
+        Vector3 wp = waypoints[currentWaypointIndex].position + currentWaypointOffset;
+        isChasing = false;
+        if (!isAggressor) return wp;
+
+        if (ram == null) ram = GetComponentInChildren<AggressorRam>();
+        if (ram != null && ram.IsCoolingDown) { chaseTarget = null; return wp; }
+
+        retargetTimer -= Time.fixedDeltaTime;
+        if (retargetTimer <= 0f)
+        {
+            retargetTimer = 0.25f;
+            chaseTarget = FindChaseTarget();
+        }
+        if (chaseTarget == null) return wp;
+
+        // Apunta a la esquina trasera del lado desde el que llegamos.
+        float side = Vector3.Dot(transform.position - chaseTarget.position,
+                                 chaseTarget.right) >= 0f ? 1f : -1f;
+        isChasing = true;
+        return chaseTarget.position
+               - chaseTarget.forward * aimBehindDistance
+               + chaseTarget.right * side * 0.8f;
+    }
+
+    Transform FindChaseTarget()
+    {
+        if (allAI == null)
+            allAI = FindObjectsByType<PhysicsAICar>();
+
+        Transform best = null;
+        float bestDist = targetSearchRadius;
+
+        if (playerCar != null) Consider(playerCar.transform);
+        foreach (var ai in allAI)
+            if (ai != null && ai != this) Consider(ai.transform);
+
+        if (best != null && best != chaseTarget)
+            Debug.Log($"[Aggressor] Chasing {best.name}");
+
+        return best;
+
+        void Consider(Transform t)
+        {
+            float d = Vector3.Distance(transform.position, t.position);
+            if (d >= bestDist) return;
+            // Ignora coches que quedaron detras (daria vuelta en U).
+            if (transform.InverseTransformPoint(t.position).z < -2f) return;
+            bestDist = d;
+            best = t;
+        }
+    }
+
+    void CheckStuck()
+    {
+        if (graceTimer > 0f) { graceTimer -= Time.fixedDeltaTime; return; }
+        if (lapTime < respawnGraceSeconds) return;
+
+        float speedKmh = carRigidbody.linearVelocity.magnitude * 3.6f;
+        stuckTimer = speedKmh < stuckSpeedKmh ? stuckTimer + Time.fixedDeltaTime : 0f;
+        flippedTimer = Vector3.Dot(carRigidbody.transform.up, Vector3.up) < 0.3f
+            ? flippedTimer + Time.fixedDeltaTime : 0f;
+
+        if (stuckTimer > stuckSeconds || flippedTimer > flippedSeconds)
+            Respawn();
+    }
+
+    void Respawn()
+    {
+        int prev = (currentWaypointIndex - 1 + waypoints.Length) % waypoints.Length;
+        Vector3 pos = waypoints[prev].position + Vector3.up * 1f;
+        Vector3 dir = waypoints[currentWaypointIndex].position - waypoints[prev].position;
+        dir.y = 0f;
+        Quaternion rot = dir.sqrMagnitude > 0.01f
+            ? Quaternion.LookRotation(dir)
+            : carRigidbody.transform.rotation;
+
+        carRigidbody.linearVelocity = Vector3.zero;
+        carRigidbody.angularVelocity = Vector3.zero;
+        carRigidbody.transform.SetPositionAndRotation(pos, rot);
+        Physics.SyncTransforms();
+
+        ClearAllBrakes();
+        chaseTarget = null;
+        stuckTimer = 0f;
+        flippedTimer = 0f;
+        graceTimer = 2f;
+
+        Debug.Log($"[Respawn] {gameObject.name} reset to waypoint {prev}");
     }
 
     void CompleteLap()

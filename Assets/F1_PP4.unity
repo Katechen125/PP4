@@ -4583,6 +4583,10 @@ MonoBehaviour:
   lapTime: 0
   bestLap: Infinity
   finished: 0
+  isAggressor: 0
+  aggressorSpeedKmh: 150
+  targetSearchRadius: 80
+  aimBehindDistance: 3
 --- !u!23 &1023665810 stripped
 MeshRenderer:
   m_CorrespondingSourceObject: {fileID: 3384025575181329629, guid: d7c9b08657eabc54db441e4854d7996e, type: 3}
@@ -5673,6 +5677,10 @@ MonoBehaviour:
   lapTime: 0
   bestLap: Infinity
   finished: 0
+  isAggressor: 0
+  aggressorSpeedKmh: 150
+  targetSearchRadius: 80
+  aimBehindDistance: 3
 --- !u!4 &1365459255 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 400006, guid: 62d38c3b81a175f4585f3bb99fca3071, type: 3}
@@ -6037,6 +6045,10 @@ MonoBehaviour:
   lapTime: 0
   bestLap: Infinity
   finished: 0
+  isAggressor: 0
+  aggressorSpeedKmh: 150
+  targetSearchRadius: 80
+  aimBehindDistance: 3
 --- !u!4 &1596877381 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7940939525272183592, guid: 47e3f046aa0d0904fa7639419bb59b94, type: 3}
@@ -6574,6 +6586,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 100016, guid: 62d38c3b81a175f4585f3bb99fca3071, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1740725704}
+    - targetCorrespondingSourceObject: {fileID: 100016, guid: 62d38c3b81a175f4585f3bb99fca3071, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1740725705}
     - targetCorrespondingSourceObject: {fileID: 100012, guid: 62d38c3b81a175f4585f3bb99fca3071, type: 3}
       insertIndex: -1
       addedObject: {fileID: 474770318}
@@ -6718,6 +6733,27 @@ MonoBehaviour:
   lapTime: 0
   bestLap: Infinity
   finished: 0
+  isAggressor: 1
+  aggressorSpeedKmh: 150
+  targetSearchRadius: 80
+  aimBehindDistance: 3
+--- !u!114 &1740725705
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1740725687}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: af94de2daec026c408c233acd136607d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AggressorRam
+  spinImpulse: 6000
+  sideImpulse: 2500
+  minRelativeSpeed: 4
+  hitCooldown: 3
+  log: 1
 --- !u!146 &1781855787 stripped
 WheelCollider:
   m_CorrespondingSourceObject: {fileID: 4698007867480641103, guid: 62d38c3b81a175f4585f3bb99fca3071, type: 3}

@@ -65,6 +65,7 @@ public class CarCollision : MonoBehaviour
 
         if (aiCar != null)
         {
+            if (aiCar.isAggressor) return;
             PenaltyManager.Instance?.CarHitOtherCar(force);
 
             Debug.Log(

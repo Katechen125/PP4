@@ -76,6 +76,9 @@ public class GameManager : MonoBehaviour
     private int crashShakeCount = 0;
     public bool isCrashing => crashShakeCount > 0;
 
+    [Header("Prediction")]
+    public float trackScale = 0.66f;
+
     void Awake()
     {
         Instance = this;
@@ -318,31 +321,32 @@ public class GameManager : MonoBehaviour
         // Best lap vs SPEEDKRAFT's estimated qualifying lap
         if (quali != null && quali.isValid && bestLapTime < Mathf.Infinity)
         {
-            float lapDiff = bestLapTime - quali.estimatedLapTimeSeconds;
+            float predLap = quali.estimatedLapTimeSeconds * trackScale;
+            float lapDiff = bestLapTime - predLap;
             string lapVerdict = Mathf.Abs(lapDiff) <= 2f
                 ? "SPOT ON"
                 : (lapDiff < 0f ? "BEAT THE PREDICTION" : "SLOWER THAN PREDICTED");
 
             lines.AppendLine(
-                $"Predicted lap {FormatTime(quali.estimatedLapTimeSeconds)}  |  " +
+                $"Predicted lap {FormatTime(predLap)}  |  " +
                 $"Actual best {FormatTime(bestLapTime)}  |  {lapVerdict} " +
                 $"({(lapDiff >= 0f ? "+" : "")}{lapDiff:0.0}s)");
         }
 
-        // Total race time vs SPEEDKRAFT's projected race time
+        // Total race time vs SPEEDKRAFT's projected race time (same number of laps)
         if (race != null && race.isValid)
         {
-            float raceDiff = raceTimer - race.totalRaceTimeSeconds;
+            float predRace = race.avgRaceLapSeconds * trackScale * totalLaps;
+            float raceDiff = raceTimer - predRace;
             string raceVerdict = Mathf.Abs(raceDiff) <= 3f
                 ? "MATCHED THE PROJECTION"
                 : (raceDiff < 0f ? "FASTER THAN PROJECTED" : "SLOWER THAN PROJECTED");
 
             lines.AppendLine(
-                $"Projected race {FormatTime(race.totalRaceTimeSeconds)}  |  " +
+                $"Projected race {FormatTime(predRace)}  |  " +
                 $"Actual {FormatTime(raceTimer)}  |  {raceVerdict} " +
                 $"({(raceDiff >= 0f ? "+" : "")}{raceDiff:0.0}s)");
         }
-
         predictionText.text = lines.ToString();
     }
 
