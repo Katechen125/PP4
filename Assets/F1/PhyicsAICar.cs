@@ -42,8 +42,8 @@ public class PhysicsAICar : MonoBehaviour
     public float lurkSpeedFactor = 0.6f;
     private Transform chaseTarget;
     private bool isChasing;
+    private bool playerAhead;
     private float retargetTimer;
-    private PhysicsAICar[] allAI;
     private AggressorRam ram;
 
     [Header("Auto Respawn")]
@@ -209,9 +209,10 @@ public class PhysicsAICar : MonoBehaviour
         float engineTorque = 0f;
         float brakeTorque = 0f;
 
-        float desiredSpeed = isChasing ? aggressorSpeedKmh
-                           : (isAggressor ? targetSpeedKmh * lurkSpeedFactor
-                                          : targetSpeedKmh);
+       float desiredSpeed = isChasing ? aggressorSpeedKmh
+                   : (isAggressor
+                        ? (playerAhead ? aggressorSpeedKmh : targetSpeedKmh * lurkSpeedFactor)
+                        : targetSpeedKmh);
 
         if (currentSpeedKmh < desiredSpeed)
         {
@@ -241,6 +242,9 @@ public class PhysicsAICar : MonoBehaviour
         isChasing = false;
         if (!isAggressor) return wp;
 
+        playerAhead = playerCar != null &&
+              transform.InverseTransformPoint(playerCar.transform.position).z > 0f;
+
         if (ram == null) ram = GetComponentInChildren<AggressorRam>();
         if (ram != null && ram.IsCoolingDown) { chaseTarget = null; return wp; }
 
@@ -263,30 +267,16 @@ public class PhysicsAICar : MonoBehaviour
 
     Transform FindChaseTarget()
     {
-        if (allAI == null)
-            allAI = FindObjectsByType<PhysicsAICar>();
+        if (playerCar == null) return null;
 
-        Transform best = null;
-        float bestDist = targetSearchRadius;
+        Transform t = playerCar.transform;
+        if (Vector3.Distance(transform.position, t.position) > targetSearchRadius) return null;
+        // Si quedaste detras de el, no da vuelta en U.
+        if (transform.InverseTransformPoint(t.position).z < -2f) return null;
 
-        if (playerCar != null) Consider(playerCar.transform);
-        foreach (var ai in allAI)
-            if (ai != null && ai != this) Consider(ai.transform);
-
-        if (best != null && best != chaseTarget)
-            Debug.Log($"[Aggressor] Chasing {best.name}");
-
-        return best;
-
-        void Consider(Transform t)
-        {
-            float d = Vector3.Distance(transform.position, t.position);
-            if (d >= bestDist) return;
-            // Ignora coches que quedaron detras (daria vuelta en U).
-            if (transform.InverseTransformPoint(t.position).z < -2f) return;
-            bestDist = d;
-            best = t;
-        }
+        if (t != chaseTarget)
+            Debug.Log($"[Aggressor] Chasing {t.name}");
+        return t;
     }
 
     void CheckStuck()

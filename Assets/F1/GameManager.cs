@@ -195,11 +195,11 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
+        if (UnityEngine.InputSystem.Keyboard.current != null &&
+            UnityEngine.InputSystem.Keyboard.current.rKey.wasPressedThisFrame)
+            ResetAllSavedData();
+
         if (!raceStarted || raceFinished) return;
-
-
-        //ResetAllSavedData(); //comment out
-
 
         raceTimer += Time.deltaTime;
         lapTimer += Time.deltaTime;

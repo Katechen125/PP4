@@ -30,6 +30,7 @@ public class AggressorRam : MonoBehaviour
 
         Rigidbody other = collision.rigidbody;
         if (other == null || other == GetComponent<Rigidbody>()) return;
+        if (other.GetComponentInParent<CarControl>() == null) return;   // solo el jugador
         if (collision.relativeVelocity.magnitude < minRelativeSpeed) return;
 
         cooldownTimer = hitCooldown;

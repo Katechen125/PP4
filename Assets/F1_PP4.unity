@@ -921,7 +921,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc03b07d0deed744ebe91d047a41b19b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
-  totalLaps: 1
+  totalLaps: 2
   threeStarTime: 100
   twoStarTime: 180
   car: {fileID: 1926110017}
@@ -947,6 +947,7 @@ MonoBehaviour:
   endScreenDelay: 2
   verstappenAudioSource: {fileID: 246027459}
   verstappenClip: {fileID: 8300000, guid: 15106e9876284554ca2489bf8665cc66, type: 3}
+  trackScale: 0.66
 --- !u!4 &246027458
 Transform:
   m_ObjectHideFlags: 0
@@ -4577,16 +4578,21 @@ MonoBehaviour:
   maxSpeedKmh: 120
   lateralOffsetAmount: 1
   offsetChangeRadius: 8
+  isAggressor: 0
+  aggressorSpeedKmh: 150
+  targetSearchRadius: 80
+  aimBehindDistance: 3
+  lurkSpeedFactor: 0.6
+  stuckSpeedKmh: 3
+  stuckSeconds: 3
+  flippedSeconds: 2
+  respawnGraceSeconds: 4
   raceStarted: 0
   currentLap: 0
   totalLaps: 2
   lapTime: 0
   bestLap: Infinity
   finished: 0
-  isAggressor: 0
-  aggressorSpeedKmh: 150
-  targetSearchRadius: 80
-  aimBehindDistance: 3
 --- !u!23 &1023665810 stripped
 MeshRenderer:
   m_CorrespondingSourceObject: {fileID: 3384025575181329629, guid: d7c9b08657eabc54db441e4854d7996e, type: 3}
@@ -5671,16 +5677,21 @@ MonoBehaviour:
   maxSpeedKmh: 120
   lateralOffsetAmount: 1.5
   offsetChangeRadius: 8
+  isAggressor: 0
+  aggressorSpeedKmh: 150
+  targetSearchRadius: 80
+  aimBehindDistance: 3
+  lurkSpeedFactor: 0.6
+  stuckSpeedKmh: 3
+  stuckSeconds: 3
+  flippedSeconds: 2
+  respawnGraceSeconds: 4
   raceStarted: 0
   currentLap: 0
   totalLaps: 2
   lapTime: 0
   bestLap: Infinity
   finished: 0
-  isAggressor: 0
-  aggressorSpeedKmh: 150
-  targetSearchRadius: 80
-  aimBehindDistance: 3
 --- !u!4 &1365459255 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 400006, guid: 62d38c3b81a175f4585f3bb99fca3071, type: 3}
@@ -6039,16 +6050,21 @@ MonoBehaviour:
   maxSpeedKmh: 120
   lateralOffsetAmount: 0
   offsetChangeRadius: 8
+  isAggressor: 0
+  aggressorSpeedKmh: 150
+  targetSearchRadius: 80
+  aimBehindDistance: 3
+  lurkSpeedFactor: 0.6
+  stuckSpeedKmh: 3
+  stuckSeconds: 3
+  flippedSeconds: 2
+  respawnGraceSeconds: 4
   raceStarted: 0
   currentLap: 0
   totalLaps: 2
   lapTime: 0
   bestLap: Infinity
   finished: 0
-  isAggressor: 0
-  aggressorSpeedKmh: 150
-  targetSearchRadius: 80
-  aimBehindDistance: 3
 --- !u!4 &1596877381 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7940939525272183592, guid: 47e3f046aa0d0904fa7639419bb59b94, type: 3}
@@ -6727,16 +6743,21 @@ MonoBehaviour:
   maxSpeedKmh: 120
   lateralOffsetAmount: 0.5
   offsetChangeRadius: 8
+  isAggressor: 1
+  aggressorSpeedKmh: 150
+  targetSearchRadius: 80
+  aimBehindDistance: 3
+  lurkSpeedFactor: 0.6
+  stuckSpeedKmh: 3
+  stuckSeconds: 3
+  flippedSeconds: 2
+  respawnGraceSeconds: 4
   raceStarted: 0
   currentLap: 0
   totalLaps: 2
   lapTime: 0
   bestLap: Infinity
   finished: 0
-  isAggressor: 1
-  aggressorSpeedKmh: 150
-  targetSearchRadius: 80
-  aimBehindDistance: 3
 --- !u!114 &1740725705
 MonoBehaviour:
   m_ObjectHideFlags: 0
