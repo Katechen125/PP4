@@ -5,8 +5,14 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 1
+  - enabled: 0
     path: Assets/F1_PP4.unity
     guid: a87f8af4510d84646b1b37efa0f9a816
+  - enabled: 1
+    path: Assets/VisionTest.unity
+    guid: cbc55aa4b04b14fa88e34723dfef857c
   m_configObjects:
+    UnityEditor.XR.VisionOS.VisionOSSettings: {fileID: 11400000, guid: 04b48c3750e72435d920525493fb6818, type: 2}
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+    com.unity.xr.arfoundation.simulation_settings: {fileID: 11400000, guid: fe3b696dcac1a4b6d80cebbba819cf5e, type: 2}
+    com.unity.xr.management.loader_settings: {fileID: 11400000, guid: beede2c29f16a474ab762e5cf6ea5c7b, type: 2}
