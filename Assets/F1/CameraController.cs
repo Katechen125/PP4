@@ -7,6 +7,7 @@ public class CameraController : MonoBehaviour
 
     [Header("Target")]
     public Transform car;
+    public Transform vrRig;
 
     [Header("Follow Cam Settings")]
     public float followDistance = 6f;
@@ -32,16 +33,18 @@ public class CameraController : MonoBehaviour
     void Awake()
     {
         Instance = this;
+        if (vrRig != null) currentView = 1;
     }
     void Update()
     {
-        if (Keyboard.current.cKey.wasPressedThisFrame)
-            CycleView();
+       if (Keyboard.current != null && Keyboard.current.cKey.wasPressedThisFrame)
+        CycleView();
     }
 
     public void CycleView()
     {
         currentView = (currentView + 1) % TOTAL_VIEWS;
+        if (vrRig != null && currentView > 1) currentView = 0;
     }
 
     string GetViewName()
@@ -59,6 +62,8 @@ public class CameraController : MonoBehaviour
     void LateUpdate()
     {
         if (car == null) return;
+
+        if (vrRig != null) { UpdateVR(); return; }
 
         switch (currentView)
         {
@@ -79,6 +84,16 @@ public class CameraController : MonoBehaviour
             transform.position, targetPos, Time.deltaTime * smoothSpeed);
 
         transform.LookAt(car.position + Vector3.up * 0.5f);
+    }
+
+    void UpdateVR()
+    {
+        Vector3 pos = currentView == 0
+            ? car.position - car.forward * followDistance + Vector3.up * followHeight
+            : car.position + car.forward * driverForwardOffset + Vector3.up * driverHeightOffset;
+
+        vrRig.position = pos;
+        vrRig.rotation = Quaternion.Euler(0f, car.eulerAngles.y, 0f);
     }
 
     void DriverView()

@@ -35,10 +35,11 @@ public class SteeringWheelRotation : MonoBehaviour
         // Detect if keyboard or wheel is being used
         // Keyboard gives exact -1, 0, or 1
         // Wheel gives smooth analog values between
-        bool keyboardLeft = Keyboard.current.aKey.isPressed ||
-                             Keyboard.current.leftArrowKey.isPressed;
-        bool keyboardRight = Keyboard.current.dKey.isPressed ||
-                             Keyboard.current.rightArrowKey.isPressed;
+        bool keyboardLeft = Keyboard.current != null &&
+            (Keyboard.current.aKey.isPressed || Keyboard.current.leftArrowKey.isPressed);
+        bool keyboardRight = Keyboard.current != null &&
+        
+            (Keyboard.current.dKey.isPressed || Keyboard.current.rightArrowKey.isPressed);
 
         isUsingKeyboard = keyboardLeft || keyboardRight ||
                           (!keyboardLeft && !keyboardRight &&

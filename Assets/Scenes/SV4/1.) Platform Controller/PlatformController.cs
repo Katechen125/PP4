@@ -34,6 +34,9 @@ public class PlatformController : MonoBehaviour
 
     private void Start()
     {
+        #if !UNITY_STANDALONE_WIN && !UNITY_EDITOR_WIN
+        return;
+        #endif
         if (!initialized) { Init(comPort, baudRate); }
     }
 

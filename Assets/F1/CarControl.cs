@@ -47,6 +47,17 @@ public class CarControl : MonoBehaviour
     public float engineBrakeHigh = 1200f; // freno motor a 200 km/h
     private float smoothGas, smoothBrake;
 
+    [HideInInspector] public bool useExternalInput;
+    [HideInInspector] public Vector2 externalMovement;
+    bool extShiftUp, extShiftDown;
+
+    public void ShiftUpExternal()   { extShiftUp = true; }
+    public void ShiftDownExternal() { extShiftDown = true; }
+    public void CycleCameraExternal()
+    {
+        if (CameraController.Instance != null) CameraController.Instance.CycleView();
+    }
+
     [Header("Gear System")]
     public int totalGears = 6;
 
@@ -78,6 +89,10 @@ public class CarControl : MonoBehaviour
     {
         carControls = new CarInputActions();
         platformConnected = false;
+
+#if !UNITY_STANDALONE_WIN && !UNITY_EDITOR_WIN
+        return;
+#endif
 
         try
         {
@@ -288,6 +303,9 @@ public class CarControl : MonoBehaviour
             Debug.LogError($"Shift error: {e.Message}");
         }
 
+        if (extShiftUp)   { shiftUp = true;   extShiftUp = false; }
+        if (extShiftDown) { shiftDown = true; extShiftDown = false; }
+
         if (shiftUp && currentGear < totalGears)
         {
             currentGear++;
@@ -377,7 +395,7 @@ public class CarControl : MonoBehaviour
 
     void FixedUpdate()
     {
-        Vector2 inputVector = carControls.Car.Movement.ReadValue<Vector2>();
+        Vector2 inputVector = useExternalInput ? externalMovement : carControls.Car.Movement.ReadValue<Vector2>();
         float rawH = inputVector.x;
         float rawY = inputVector.y;
         float gas = Mathf.Max(0f, rawY);
